@@ -10,7 +10,7 @@ export default class ShipsCounter {
 
 
     private _countOfRemaining: Record<number, number>;
-    private  _countOfPlaced: number;
+    private _countOfPlaced: number;
 
     private readonly countShips: number;
     private readonly shipsOfSize1: number;
@@ -31,7 +31,7 @@ export default class ShipsCounter {
 
     }
 
-    private getDefaultShipCount(){
+    private getDefaultShipCount() {
         return reactive({
             4: this.shipsOfSize4,
             3: this.shipsOfSize3,
@@ -57,16 +57,16 @@ export default class ShipsCounter {
         return this._countOfPlaced === this.countShips;
     }
 
-    public getRemainingCount(shipSize: number): number{
+    public getRemainingCount(shipSize: number): number {
         return this._countOfRemaining[shipSize];
     }
 
-    public setAllPlaced(){
-        for(let i = 1; i <= 4; i++) this._countOfRemaining[i] = 0;
+    public setAllPlaced() {
+        for (let i = 1; i <= 4; i++) this._countOfRemaining[i] = 0;
         this._countOfPlaced = this.countShips;
     }
 
-    public setAllRemaining(){
+    public setAllRemaining() {
         this._countOfRemaining = this.getDefaultShipCount();
         this._countOfPlaced = 0;
     }

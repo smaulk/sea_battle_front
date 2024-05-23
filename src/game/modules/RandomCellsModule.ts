@@ -1,7 +1,7 @@
-import { ShipData } from "../interfaces/ShipData";
+import {ShipData} from "../interfaces/ShipData";
 import {getEmptyCells, getRandomInt} from "./Functions";
-import { Position } from "../enums/Position";
-import { ColRowData } from "../interfaces/ColRowData";
+import {Position} from "../enums/Position";
+import {ColRowData} from "../interfaces/ColRowData";
 import ShipPlaceValidationModule from "./ShipPlaceValidationModule";
 import {BattlefieldData} from "../interfaces/BattlefieldData";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
@@ -20,7 +20,7 @@ export default class RandomCellsModule {
     }
 
 
-    public getBattlefieldData(ships: Array<ShipData>): BattlefieldData| null {
+    public getBattlefieldData(ships: Array<ShipData>): BattlefieldData | null {
         this._ships = ships;
         for (let attempt = 0; attempt < 1000; attempt++) {
             if (this.placeAllShips()) {
@@ -43,13 +43,13 @@ export default class RandomCellsModule {
         return true;
     }
 
-    private placeShip(i : number): boolean {
+    private placeShip(i: number): boolean {
         let attempts = 50;
         while (attempts-- > 0) {
-            const { col, row, position } = this.getRandomPosition();
-            this._ships[i] = { ...this._ships[i], position };
-            if (this.validationModule.checkCellsForPlacement(this._ships[i], { col, row })) {
-                this.setShip(this._ships[i], { col, row });
+            const {col, row, position} = this.getRandomPosition();
+            this._ships[i] = {...this._ships[i], position};
+            if (this.validationModule.checkCellsForPlacement(this._ships[i], {col, row})) {
+                this.setShip(this._ships[i], {col, row});
                 return true;
             }
         }
@@ -61,7 +61,7 @@ export default class RandomCellsModule {
         const col = getRandomInt(size);
         const row = getRandomInt(size);
         const position = Math.random() > 0.5 ? Position.Horizontal : Position.Vertical;
-        return { col, row, position };
+        return {col, row, position};
     }
 
     private setShip(ship: ShipData, start: ColRowData): void {

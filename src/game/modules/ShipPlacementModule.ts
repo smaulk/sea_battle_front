@@ -4,7 +4,7 @@ import ShipPlaceValidationModule from "./ShipPlaceValidationModule";
 import {Position} from "../enums/Position";
 import Cell from "../classes/Cell";
 import {ShipData} from "../interfaces/ShipData";
-import {getEmptyCells} from "./Functions";
+import {getEmptyCells, getStartCellShip} from "./Functions";
 import CellCreator from "../classes/CellCreator";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
 
@@ -17,48 +17,43 @@ export default class ShipPlacementModule {
 
     constructor(cells: CellsMatrix, cellCreator: CellCreator) {
         this.shipValidation = new ShipPlaceValidationModule(cells);
-        this.shipValidation = new ShipPlaceValidationModule(cells);
         this._cells = cells;
         this._oldCell = null;
         this.cellCreator = cellCreator;
     }
 
 
-
     public placeShipToCell(cellData: ColRowData, ship: Ship): boolean {
-        const cell = this.cellCreator.create(cellData);
-        if (ship === null || cell === null) {
-            return false;
-        }
+        const cell: Cell | null = this.cellCreator.create(cellData);
+        if (!ship || !cell) return false;
 
-        const isValid = cell.isValidPlace(this.shipValidation, ship);
-
-        if (isValid) {
+        if (cell.isValidPlace(this.shipValidation, ship)) {
             this.placeToCells(cell, ship);
             return true;
         }
-
         return false;
     }
 
-    private placeToCells(cell: Cell | null, ship: Ship | null) {
-        if(!cell || !ship) return;
+    private getNewCellData(cellData: ColRowData, position: Position, offset: number): ColRowData {
+        return {
+            col: position === Position.Horizontal ? cellData.col + offset : cellData.col,
+            row: position === Position.Vertical ? cellData.row + offset : cellData.row,
+        };
+    }
+
+    private placeToCells(cell: Cell | null, ship: Ship | null): void {
+        if (!cell || !ship) return;
         cell.appendShip(ship);
 
         for (let i = 0; i < ship.shipData.size; i++) {
-            let newCellData: ColRowData = {
-                col: ship.shipData.position === Position.Horizontal ? cell.cellData.col + i : cell.cellData.col,
-                row: ship.shipData.position === Position.Vertical ? cell.cellData.row + i : cell.cellData.row,
-            };
-
+            const newCellData: ColRowData = this.getNewCellData(cell.cellData, ship.shipData.position, i);
             this.placeShip(this.cellCreator.create(newCellData), ship);
         }
-
     }
 
 
     private placeShip(cell: Cell | null, ship: Ship): void {
-        if (!cell) return;
+        if (!cell || !ship) return;
         cell.setCellClassShip();
         this.setShipIdInCell(cell, ship.shipData.id)
     }
@@ -66,24 +61,16 @@ export default class ShipPlacementModule {
 
     public removeShipFromCell(cellData: ColRowData, ship: Ship): void {
         const cell = this.cellCreator.create(cellData);
-        if (ship === null || cell === null) {
-            return;
-        }
+        if (!ship || !cell) return;
 
         for (let i = 0; i < ship.shipData.size; i++) {
-            let newCellData: ColRowData = {
-                col: ship.shipData.position === Position.Horizontal ? cell.cellData.col + i : cell.cellData.col,
-                row: ship.shipData.position === Position.Vertical ? cell.cellData.row + i : cell.cellData.row,
-            };
-
+            const newCellData = this.getNewCellData(cell.cellData, ship.shipData.position, i);
             this.removeShip(this.cellCreator.create(newCellData));
         }
-
-
     }
 
-    private removeShip(cell: Cell| null): void {
-        if(!cell) return;
+    private removeShip(cell: Cell | null): void {
+        if (!cell) return;
         this.setShipIdInCell(cell, null);
         cell.setCellClassEmpty();
     }
@@ -96,11 +83,9 @@ export default class ShipPlacementModule {
 
     public placeShipCheck(cellData: ColRowData, ship: Ship): boolean {
         const cell = this.cellCreator.create(cellData);
-        if (ship === null || cell === null) return false;
+        if (!ship || !cell) return false;
 
-        const isValid = cell.isValidPlace(this.shipValidation, ship);
-
-        if (isValid) {
+        if (cell.isValidPlace(this.shipValidation, ship)) {
             this.placeShipAllowed(cell, ship)
             ship.setClassAllowed()
             return true;
@@ -112,90 +97,43 @@ export default class ShipPlacementModule {
 
 
     private placeShipAllowed(cell: Cell, ship: Ship): void {
-
         this._oldCell = cell;
 
-
         for (let i = 0; i < ship.shipData.size; i++) {
-            let newCellData: ColRowData = {
-                col: ship.shipData.position === Position.Horizontal ? cell.cellData.col + i : cell.cellData.col,
-                row: ship.shipData.position === Position.Vertical ? cell.cellData.row + i : cell.cellData.row,
-            };
-
-            this.putShipAllowed(this.cellCreator.create(newCellData));
+            const newCellData: ColRowData = this.getNewCellData(cell.cellData, ship.shipData.position, i);
+            const newCell: Cell | null = this.cellCreator.create(newCellData);
+            if (newCell) newCell.setShipAllowed();
         }
-
     }
-
-    private putShipAllowed(cell: Cell | null): void {
-        if(!cell) return;
-        cell.setShipAllowed();
-    }
-
 
     public removeShipAllowed(ship: Ship): void {
-        if (this._oldCell === null) return;
+        if (!this._oldCell) return;
 
         for (let i = 0; i < ship.shipData.size; i++) {
-            let newCellData: ColRowData = {
-                col: ship.shipData.position === Position.Horizontal ? this._oldCell.cellData.col + i : this._oldCell.cellData.col,
-                row: ship.shipData.position === Position.Vertical ? this._oldCell.cellData.row + i : this._oldCell.cellData.row,
-            };
-
-            this.removeCellAllowed(this.cellCreator.create(newCellData));
+            const newCellData: ColRowData = this.getNewCellData(this._oldCell.cellData, ship.shipData.position, i);
+            const newCell: Cell | null = this.cellCreator.create(newCellData);
+            if(newCell) newCell.removeShipAllowed();
         }
-
     }
 
-    private removeCellAllowed(cell: Cell | null) {
-        if(!cell) return;
-        cell.removeShipAllowed();
-    }
-
-
-    private clearCellsArray(): void{
-        const emptyCells = getEmptyCells();
-        this._cells.splice(0, this._cells.length);
-        this.pushCellsArray(emptyCells)
-    }
-
-    private pushCellsArray(cells : CellsMatrix): void{
-        this._cells.push(...cells);
+    private clearCellsArray(): void {
+        this._cells.splice(0, this._cells.length, ...getEmptyCells());
     }
 
 
-    public placeShipsFromCells(cells: CellsMatrix, ships: Array<ShipData>) {
-        if(cells === null || ships === null) return;
+    public placeShipsFromCells(cells: CellsMatrix, ships: Array<ShipData>): void {
+        if (!cells || !ships) return;
         this.clearCellsArray();
 
-        const size = cells.length;
-        const shipPositions: Array<{id: number | null, startCellData: ColRowData}> = [];
+        const placedShips = new Set<number | null>();
 
-        // Iterate through each cell
-        for (let row = 0; row < size; row++) {
-            for (let col = 0; col < size; col++) {
-                // If the cell contains a ship
-                if (cells[row][col] !== null) {
-                    // Check if this ship is already in the list
-                    const shipId = cells[row][col];
-                    const existingShip = shipPositions.find(ship => ship.id === shipId);
-
-                    // If the ship is not in the list, add it
-                    if (!existingShip) {
-                        shipPositions.push({
-                            id: shipId,
-                            startCellData: { row, col },
-                        });
-                    }
+        for (const shipData of ships) {
+            if (!placedShips.has(shipData.id)) {
+                const startCellData: ColRowData | null = getStartCellShip(cells, shipData.id);
+                if (startCellData) {
+                    this.placeToCells(this.cellCreator.create(startCellData), Ship.create(shipData));
+                    placedShips.add(shipData.id);
                 }
-            }
-        }
-
-        // Now we have ship positions, we can place ships based on these positions
-        for (const shipPosition of shipPositions) {
-            const shipData = ships.find(ship => ship.id === shipPosition.id);
-            if (shipData) {
-                this.placeToCells(this.cellCreator.create(shipPosition.startCellData), Ship.create(shipData))
             }
         }
     }

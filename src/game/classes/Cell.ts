@@ -33,7 +33,7 @@ export default class Cell {
 
 
     public appendShip(ship: Ship | null): void {
-        if(!ship) return;
+        if (!ship) return;
         this._cellHtmlElem.append(ship.shipElem);
     }
 

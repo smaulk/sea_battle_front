@@ -15,19 +15,19 @@ import CellCreator from "../classes/CellCreator";
 import BotModule from "./BotModule";
 import {config} from "@/config";
 import {GameStatus} from "../enums/GameStatus";
-import {HitData} from "../interfaces/HitData";
+import {BotHitData, HitData} from "../interfaces/HitData.ts";
 import {HitStatus} from "../enums/HitStatus";
 import ShipsCounter from "../classes/ShipsCounter";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
 
 export default class GameModule {
     //Клетки и корабли игрока
-    private _selfCells: CellsMatrix;
+    private readonly _selfCells: CellsMatrix;
     private _selfShips: Array<ShipData>;
-    private _hitsOnSelfShips: Array<number>;
+    private readonly _hitsOnSelfShips: Array<number>;
 
     //Нажатые пользователем клетки на поле противника (изначально пустые)
-    private _rivalClickedCells: CellsMatrix;
+    private readonly _rivalClickedCells: CellsMatrix;
     //Модуль бота
     private botModule: BotModule;
     //Поля для игры (html)
@@ -77,8 +77,8 @@ export default class GameModule {
     /*
     Установить клетку в качестве последней нажатой на поле противника.
      */
-    private setLastClickedCellRival(cell: Cell | null) {
-        if(!cell) return;
+    private setLastClickedCellRival(cell: Cell | null): void {
+        if (!cell) return;
         if (this.lastClickedCellsRival) {
             const oldCell = this.rivalCellCreator.create(this.lastClickedCellsRival);
             if (oldCell) oldCell.removeCellClassLast();
@@ -91,11 +91,11 @@ export default class GameModule {
     /*
     Установить клетку в качестве последней нажатой на поле игрока.
      */
-    private setLastClickedCellSelf(cell: Cell) {
+    private setLastClickedCellSelf(cell: Cell): void {
         if (!cell) return;
         if (this.lastClickedCellsSelf) {
             const oldCell = this.selfCellCreator.create(this.lastClickedCellsSelf);
-            if(oldCell) oldCell.removeCellClassLast();
+            if (oldCell) oldCell.removeCellClassLast();
         }
         this.lastClickedCellsSelf = cell.cellData;
         cell.setCellClassLast();
@@ -112,47 +112,44 @@ export default class GameModule {
         const clickedCell = this.checkClickedCells(cellData);
         if (clickedCell) return true;
 
-
         const cell: Cell | null = this.rivalCellCreator.create(cellData);
-        if(!cell) return false;
+        if (!cell) return false;
         this.setLastClickedCellRival(cell);
         //Получаю от соперника(бота) данные корабля и стартовой клетки корабля (если их нет то null)
-        const {shipData, startCellData} = this.botModule.hitOnBotCell(cellData);
-        //Если попал в корабль
-        if (shipData) {
-
-            this.setClickedCell(cellData, shipData.id);
-            //Если корабль уничтожен
-            if (startCellData) {
-                const startCell = this.rivalCellCreator.create(startCellData);
-                if(startCell) {
-                    startCell.appendShip(Ship.create(shipData, true));
-                    this.setRivalShipDestroyed(startCellData, shipData);
-                    this.rivalShipsCounter.incrementPlaced();
-                    this.rivalShipsCounter.decrementRemaining(shipData.size);
-                }
-            }
-            else //Если не убил корабль
-            {
-                cell.setCellClassHit();
-            }
-
-            return true;
-        } else //Если не попал по кораблю
-        {
+        const hitData: HitData = this.botModule.hitOnBotCell(cellData);
+        //Если не попал в корабль
+        if (hitData.hit === HitStatus.Miss) {
             this.setClickedCell(cellData);
             cell.setCellClassMiss();
         }
+        //Если попал в корабль
+        else {
+            if (!hitData.ship) return false;
+            this.setClickedCell(cellData, hitData.ship.id);
+            //Если корабль уничтожен
+            if (hitData.hit === HitStatus.Destroyed && hitData.startCell) {
+                const startCell = this.rivalCellCreator.create(hitData.startCell);
+                if (startCell) {
+                    startCell.appendShip(Ship.create(hitData.ship, true));
+                    this.setRivalShipDestroyed(hitData.startCell, hitData.ship);
+                    this.rivalShipsCounter.incrementPlaced();
+                    this.rivalShipsCounter.decrementRemaining(hitData.ship.size);
+                }
+            }
+            //Если корабль не уничтожен
+            else cell.setCellClassHit();
+
+            return true;
+        }
 
         this.setWaitRival();
-
         return false;
     }
 
     /*
         Заблокировать поле противника.
      */
-    private setWaitRival() {
+    private setWaitRival(): void {
         this.battlefieldSelf.classList.remove('battlefield__wait');
         this.battlefieldRival.classList.add('battlefield__wait');
     }
@@ -160,7 +157,7 @@ export default class GameModule {
     /*
         Заблокировать поле игрока.
      */
-    private setWaitSelf() {
+    private setWaitSelf(): void {
         this.battlefieldRival.classList.remove('battlefield__wait');
         this.battlefieldSelf.classList.add('battlefield__wait');
     }
@@ -169,7 +166,7 @@ export default class GameModule {
     /*
         Записать клетку в список нажатых игроком клеток.
      */
-    private setClickedCell(cellData: ColRowData, shipId?: number | null) {
+    private setClickedCell(cellData: ColRowData, shipId?: number | null): void {
         this._rivalClickedCells[cellData.row][cellData.col] =
             shipId !== null && shipId !== undefined ? shipId : -1;
     }
@@ -178,30 +175,30 @@ export default class GameModule {
         Проверить, нажата ли кнопка, и есть ли попадание.
      */
 
-    private checkClickedCells(cellData: ColRowData) {
+    private checkClickedCells(cellData: ColRowData): number | null {
         return this._rivalClickedCells[cellData.row][cellData.col];
     }
 
 
-    private setRivalShipDestroyed(startCellData: ColRowData, shipData: ShipData) {
+    private setRivalShipDestroyed(startCellData: ColRowData, shipData: ShipData): void {
         this.addClassDoneToCellsRival(startCellData, shipData);
         this.addClassMissToCellsRival(startCellData, shipData);
     }
 
-    private addClassDoneToCellsRival(startCellData: ColRowData, shipData: ShipData) {
+    private addClassDoneToCellsRival(startCellData: ColRowData, shipData: ShipData): void {
         const shipCells = getShipCells(startCellData, shipData);
         for (let cellData of shipCells) {
             const cell = this.rivalCellCreator.create(cellData);
-            if(cell) cell.setCellClassDestroyed();
+            if (cell) cell.setCellClassDestroyed();
         }
     }
 
 
-    private addClassMissToCellsRival(startCellData: ColRowData, shipData: ShipData) {
+    private addClassMissToCellsRival(startCellData: ColRowData, shipData: ShipData): void {
         const emptyCells = this.getShipEmptyCellsFiltered(startCellData, shipData);
         for (let cellData of emptyCells) {
             const cell = this.rivalCellCreator.create(cellData);
-            if(cell){
+            if (cell) {
                 cell.setCellClassMissAuto();
                 this.setClickedCell(cellData);
             }
@@ -209,21 +206,21 @@ export default class GameModule {
     }
 
 
-    private setSelfShipDestroyed(startCellData: ColRowData, shipData: ShipData) {
+    private setSelfShipDestroyed(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
         this.addClassDoneToCellsSelf(startCellData, shipData);
         return this.addClassMissToCellsSelf(startCellData, shipData);
     }
 
-    private addClassDoneToCellsSelf(startCellData: ColRowData, shipData: ShipData) {
+    private addClassDoneToCellsSelf(startCellData: ColRowData, shipData: ShipData): void {
         const shipCells = getShipCells(startCellData, shipData);
         for (let cellData of shipCells) {
             const cell = this.selfCellCreator.create(cellData);
-            if(cell) cell.setCellClassDestroyed();
+            if (cell) cell.setCellClassDestroyed();
         }
     }
 
 
-    private addClassMissToCellsSelf(startCellData: ColRowData, shipData: ShipData) {
+    private addClassMissToCellsSelf(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
         const emptyCells = this.getShipEmptyCellsFiltered(startCellData, shipData);
         for (let cellData of emptyCells) {
             const cell = this.selfCellCreator.create(cellData);
@@ -233,11 +230,11 @@ export default class GameModule {
     }
 
 
-    private getShipInSelfCell(cellData: ColRowData) {
+    private getShipInSelfCell(cellData: ColRowData): number | null {
         return this._selfCells[cellData.row][cellData.col];
     }
 
-    public hitOnSelfCell(cellData: ColRowData): HitData | null {
+    public hitOnSelfCell(cellData: ColRowData): BotHitData | null {
         const cell = this.selfCellCreator.create(cellData);
         if (!cell) return null;
         this.setLastClickedCellSelf(cell);
@@ -245,12 +242,12 @@ export default class GameModule {
 
         if (shipId) {
             const shipData = this._selfShips.find(ship => ship.id === shipId);
-            if(shipData){
+            if (shipData) {
                 this._hitsOnSelfShips[shipId]++;
                 //Если корабль уничтожен
                 if (this._hitsOnSelfShips[shipId] === shipData.size) {
                     const startCellData = getStartCellShip(this._selfCells, shipId);
-                    if(startCellData){
+                    if (startCellData) {
                         const emptyCells = this.setSelfShipDestroyed(startCellData, shipData);
                         this._selfShipsDestroyed++;
 
@@ -279,24 +276,19 @@ export default class GameModule {
 
 
     private getShipEmptyCellsFiltered(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
-        let filteredCells: Array<ColRowData> = [];
+        const filteredCells: Array<ColRowData> = [];
         const shipCells = getShipCells(startCellData, shipData);
 
-        const isUnique = (cellData: ColRowData) => {
-            return !filteredCells.some(cell => equalColRowData(cell, cellData));
-        }
+        const isUnique = (cellData: ColRowData) => !filteredCells.some(cell => equalColRowData(cell, cellData));
 
-        for (let shipCell of shipCells) {
+        shipCells.forEach(shipCell => {
             const emptyCells = getAroundCells(shipCell);
-            for (let cell of emptyCells) {
-                if (isUnique(cell)) filteredCells.push(cell)
-            }
-        }
-        for (let shipCell of shipCells) {
-            filteredCells = filteredCells.filter(cellData => !equalColRowData(cellData, shipCell));
-        }
+            emptyCells.forEach(cell => {
+                if (isUnique(cell)) filteredCells.push(cell);
+            });
+        });
 
-        return filteredCells;
+        return filteredCells.filter(cellData => !shipCells.some(shipCell => equalColRowData(cellData, shipCell)));
     }
 
 
@@ -318,12 +310,12 @@ export default class GameModule {
 
                 setTimeout(async () => {
                     const cellData: ColRowData | null = this.botModule.getCellToHit();
-                    if(!cellData) return;
-                    const hitData: HitData | null = this.hitOnSelfCell(cellData);
-                    if (!hitData) return;
+                    if (!cellData) return;
+                    const RivalHitData: BotHitData | null = this.hitOnSelfCell(cellData);
+                    if (!RivalHitData) return;
 
-                    this.botModule.setHitData(cellData, hitData);
-                    if (hitData.hit) {
+                    this.botModule.setRivalHitData(cellData, RivalHitData);
+                    if (RivalHitData.hit) {
                         const gameInfo = this.checkDestroyedShips();
                         if (gameInfo) {
                             this.isCanClick = false;

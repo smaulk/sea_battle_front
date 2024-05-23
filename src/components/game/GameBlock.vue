@@ -40,7 +40,7 @@ const route = useRoute();
 let difficultyLevel: DifficultyLevel = DifficultyLevel.Normal;
 onBeforeMount(() => {
   const level = route.query.difficulty;
-  if(level === DifficultyLevel.Easy){
+  if (level === DifficultyLevel.Easy) {
     difficultyLevel = DifficultyLevel.Easy;
   }
 })
@@ -50,9 +50,9 @@ onBeforeMount(() => {
 
 <template>
   <div :key="$route.fullPath">
-      <ProcessGameBlock :cells-array="cellsArray" :ships-array="shipsArray" :difficulty-level="difficultyLevel"
-                        v-if="gameIsStarted"  @reload-game="reloadGame"/>
-      <StartGameBlock @start-game="startGame" :difficulty-level="difficultyLevel" v-else/>
+    <ProcessGameBlock :cells-array="cellsArray" :ships-array="shipsArray" :difficulty-level="difficultyLevel"
+                      v-if="gameIsStarted" @reload-game="reloadGame"/>
+    <StartGameBlock @start-game="startGame" :difficulty-level="difficultyLevel" v-else/>
   </div>
 </template>
 

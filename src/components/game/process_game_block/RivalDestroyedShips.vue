@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import { Position } from "game/enums/Position";
+import {Position} from "game/enums/Position";
 
-const { getRemainingCount } = defineProps({
+const {getRemainingCount} = defineProps({
   getRemainingCount: Function,
 })
 
@@ -66,7 +66,7 @@ const { getRemainingCount } = defineProps({
       content: ''; /* Пустое содержимое для псевдоэлементов */
       position: absolute; /* Абсолютное позиционирование */
       width: 100%; /* Ширина псевдоэлементов */
-      height: calc(var(--game-grid-cell-size)/12); /* Высота псевдоэлементов */
+      height: calc(var(--game-grid-cell-size) / 12); /* Высота псевдоэлементов */
       background-color: red; /* Цвет псевдоэлементов */
     }
   }

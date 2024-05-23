@@ -76,7 +76,7 @@ const gameInfo = ref(GameStatus.InProgress);
 
 const clickEnemyCell = async (event: Event) => {
   const info: GameStatus | null = await gameModule.gameHandler(event);
-  if(info !== null) gameInfo.value = info;
+  if (info !== null) gameInfo.value = info;
 }
 
 const getRivalShipsRemainingCount = (size: number) => {
@@ -87,13 +87,14 @@ const getRivalShipsRemainingCount = (size: number) => {
 
 <template>
   <div class="py-3 py-xxl-0">
-    <div class="">
+    <div>
       <p class="h5">Уровень сложности: {{ DifficultyLevelRU[difficultyLevel as DifficultyLevel] }}</p>
     </div>
 
-    <div class="d-flex justify-content-between row gap-5 gap-xxl-0">
 
-      <div class="col-12 col-xxl-5 battlefield__self"
+    <div class="d-flex justify-content-center row gap-4 gap-xl-0">
+
+      <div class="col-12 col-xl-6 col-xxl-5 battlefield__self "
            ref="battlefieldSelf">
         <p class="h1 text-center not-highlight">Ваше поле</p>
         <BattlefieldBlock v-model:cells="selfCellElements"/>
@@ -104,9 +105,10 @@ const getRivalShipsRemainingCount = (size: number) => {
       </div>
 
       <div
-          class="col-12 col-xxl-7 battlefield__rival d-flex justify-content-center align-items-center mx-0 gap-3 gap-xxl-5  row row-cols-1 row-cols-lg-2"
+          class="col-12 col-xl-6 col-xxl-7 battlefield__rival d-flex justify-content-center align-items-center
+           mx-0 gap-3 row"
           ref="battlefieldRival">
-        <div>
+        <div class="col-12 col-sm-8 col-lg-7 col-xl-12 col-xxl-8">
           <p class="h1 text-center not-highlight">Поле противника</p>
           <BattlefieldBlock v-model:cells="rivalCellElements"/>
         </div>

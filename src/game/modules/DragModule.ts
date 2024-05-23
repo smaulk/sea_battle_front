@@ -79,7 +79,7 @@ export default class DragModule {
         this.dragTop.value = this.getPageY(event) - this.shipInitialCoordinates.Y;
 
         const ship = this.getShipById(this.draggableShipId.value);
-        if(!ship || !ship.isDragging()) return;
+        if (!ship || !ship.isDragging()) return;
 
         this.shipPlacementModule.removeShipAllowed(ship);
 
@@ -107,7 +107,7 @@ export default class DragModule {
         }
 
         const ship = this.getShipById(this.draggableShipId.value);
-        if(!ship || !ship.isDragging()) return;
+        if (!ship || !ship.isDragging()) return;
 
         this.shipPlacementModule.removeShipAllowed(ship);
 
@@ -205,7 +205,7 @@ export default class DragModule {
     public resizeEvent(): void {
         if (this.draggableShipId.value === -1) return;
         const ship = this.getShipById(this.draggableShipId.value)
-        if(!ship || !ship.isDragging()) return;
+        if (!ship || !ship.isDragging()) return;
 
         this.shipPlacementModule.removeShipAllowed(ship);
         ship.removeDragging()
@@ -214,21 +214,21 @@ export default class DragModule {
         this.clearValues();
     }
 
-    private fullPlacedShips() {
+    private fullPlacedShips(): void {
         this.clearPlacedShipsArray();
         for (let shipId of this.ships) {
             this.placedShips.value.push(shipId.id);
         }
     }
 
-    private clearPlacedShipsArray() {
+    private clearPlacedShipsArray(): void {
         this.placedShips.value.splice(0, this.placedShips.value.length);
     }
 
 
-    public randomPlace() {
-        const battlefieldData:BattlefieldData | null = new RandomCellsModule().getBattlefieldData(this.ships);
-        if(!battlefieldData) return;
+    public randomPlace(): void {
+        const battlefieldData: BattlefieldData | null = new RandomCellsModule().getBattlefieldData(this.ships);
+        if (!battlefieldData) return;
         this.ships = battlefieldData.ships;
         this.shipPlacementModule.placeShipsFromCells(battlefieldData.cells, this.ships);
         this.fullPlacedShips();

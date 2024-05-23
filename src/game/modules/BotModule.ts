@@ -1,7 +1,7 @@
 import {ShipData} from "@/game/interfaces/ShipData";
 import {compareNum, equalColRowData, getEmptyCells, getRandomInt, getStartCellShip} from "@/game/modules/Functions";
 import {ColRowData} from "@/game/interfaces/ColRowData";
-import {HitData} from "@/game/interfaces/HitData";
+import {BotHitData, HitData} from "game/interfaces/HitData.ts";
 import {HitStatus} from "@/game/enums/HitStatus";
 import {DifficultyLevel} from "@/game/enums/DifficultyLevel";
 import {CellsMatrix} from "@/game/interfaces/CellsMatrix";
@@ -9,13 +9,13 @@ import {CellsMatrix} from "@/game/interfaces/CellsMatrix";
 export default class BotModule {
 
     //Клетки игрока для заполнения в процессе (изначально пустые)
-    private _userCells: CellsMatrix;
+    private readonly _userCells: CellsMatrix;
     //Клетки и корабли бота
-    private _botCells: CellsMatrix;
+    private readonly _botCells: CellsMatrix;
     private _botShips: Array<ShipData>;
-    private _hitsOnBotShips: Array<number>;
-    private historyHitCells: Array<{ col: number, row: number, hit: HitStatus }> = [];
-    private difficultyLevel: DifficultyLevel = DifficultyLevel.Easy;
+    private readonly _hitsOnBotShips: Array<number>;
+    private historyHitCells: Array<{ cell: ColRowData, hit: HitStatus }> = [];
+    private readonly difficultyLevel: DifficultyLevel = DifficultyLevel.Easy;
 
     constructor(botCells: CellsMatrix, botShips: Array<ShipData>, difficultyLevel: DifficultyLevel) {
         this._botCells = botCells;
@@ -40,29 +40,29 @@ export default class BotModule {
         const firstHitCell = this.historyHitCells[0];
 
         if (historyLength === 1) {
-            return this.getRandomCellForShipHit(firstHitCell);
+            return this.getRandomCellForShipHit(firstHitCell.cell);
         }
 
         const lastHitCell = this.historyHitCells[historyLength - 1];
         const penultHitCell = this.historyHitCells[historyLength - 2];
 
         if (lastHitCell.hit === HitStatus.Hit) {
-            const newHitCell = this.getNearbyCell(lastHitCell, firstHitCell);
+            const newHitCell = this.getNearbyCell(lastHitCell.cell, firstHitCell.cell);
             if (!this.checkCellIsHit(newHitCell)) {
                 this.setCellIsHit(newHitCell);
                 return newHitCell;
             }
         }
 
-        if (penultHitCell.hit === HitStatus.Hit && !equalColRowData(firstHitCell, penultHitCell)) {
-            const newHitCell = this.getNearbyCell(firstHitCell, penultHitCell);
+        if (penultHitCell.hit === HitStatus.Hit && !equalColRowData(firstHitCell.cell, penultHitCell.cell)) {
+            const newHitCell = this.getNearbyCell(firstHitCell.cell, penultHitCell.cell);
             if (!this.checkCellIsHit(newHitCell)) {
                 this.setCellIsHit(newHitCell);
                 return newHitCell;
             }
         }
 
-        return this.getRandomCellForShipHit(firstHitCell);
+        return this.getRandomCellForShipHit(firstHitCell.cell);
     }
 
     private getNearbyCell(cell1: ColRowData, cell2: ColRowData): ColRowData {
@@ -72,7 +72,7 @@ export default class BotModule {
         };
     }
 
-    private getRandomCellForShipHit(cellData: ColRowData) {
+    private getRandomCellForShipHit(cellData: ColRowData): ColRowData | null {
         // Создаем список соседних клеток
         let neighbors = [
             {col: cellData.col + 1, row: cellData.row},
@@ -97,7 +97,7 @@ export default class BotModule {
     }
 
     // Функция для перемешивания массива (алгоритм Fisher-Yates)
-    private shuffle(array: any[]) {
+    private shuffle(array: any[]): any[] {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [array[i], array[j]] = [array[j], array[i]];
@@ -105,7 +105,7 @@ export default class BotModule {
         return array;
     }
 
-    private getRandomCell() {
+    private getRandomCell(): ColRowData {
         const size = this._userCells.length;
 
         const randomCell = (): ColRowData => {
@@ -131,52 +131,55 @@ export default class BotModule {
             : this._userCells[cellData.row][cellData.col] !== null;
     }
 
-    private setCellIsHit(cellData: ColRowData) {
+    private setCellIsHit(cellData: ColRowData): void {
         this._userCells[cellData.row][cellData.col] = 1;
     }
 
     /*
     Сообщить боту результат его попадания.
      */
-    public setHitData(cellData: ColRowData, hitData: HitData): void {
-        if (hitData.hit === HitStatus.Hit ||
-            (hitData.hit === HitStatus.Miss && this.historyHitCells.length !== 0)) {
-            this.historyHitCells.push({...cellData, hit: hitData.hit});
-        }
-        else if (hitData.hit === HitStatus.Destroyed) {
+    public setRivalHitData(cellData: ColRowData, RivalHitData: BotHitData): void {
+        if (RivalHitData.hit === HitStatus.Hit ||
+            (RivalHitData.hit === HitStatus.Miss && this.historyHitCells.length !== 0)) {
+            this.historyHitCells.push({cell: cellData, hit: RivalHitData.hit});
+        } else if (RivalHitData.hit === HitStatus.Destroyed) {
             this.historyHitCells.length = 0;
 
-            if (hitData.emptyCells) {
-                for (const cell of hitData.emptyCells) {
+            if (RivalHitData.emptyCells) {
+                for (const cell of RivalHitData.emptyCells) {
                     this.setCellIsHit(cell);
                 }
             }
         }
     }
 
-    public hitOnBotCell(cellData: ColRowData) {
+    public hitOnBotCell(cellData: ColRowData): HitData {
         const shipId = this.getShipInBotCell(cellData)
         if (shipId) {
             const shipData = this._botShips.find(ship => ship.id === shipId);
-           if(shipData){
-               this._hitsOnBotShips[shipId]++;
-               let startCellData = null;
-               if (this._hitsOnBotShips[shipId] === shipData.size) {
-                   startCellData = getStartCellShip(this._botCells, shipId);
-               }
-               return {
-                   shipData: shipData,
-                   startCellData: startCellData,
-               };
-           }
+            if (shipData) {
+                this._hitsOnBotShips[shipId]++;
+                let startCellData = null;
+                let hit = HitStatus.Hit;
+                if (this._hitsOnBotShips[shipId] === shipData.size) {
+                    startCellData = getStartCellShip(this._botCells, shipId);
+                    hit = HitStatus.Destroyed;
+                }
+                return {
+                    hit: hit,
+                    ship: shipData,
+                    startCell: startCellData,
+                };
+            }
         }
         return {
-            shipData: null,
-            startCellData: null
+            hit: HitStatus.Miss,
+            ship: null,
+            startCell: null
         };
     }
 
-    private getShipInBotCell(cellData: ColRowData) {
+    private getShipInBotCell(cellData: ColRowData): number | null {
         return this._botCells[cellData.row][cellData.col];
     }
 

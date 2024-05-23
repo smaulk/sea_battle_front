@@ -11,7 +11,7 @@ const routes = [
         component: MainBlock
     },
     {
-        name:'Game',
+        name: 'Game',
         path: '/game',
         component: GameBlock,
     },

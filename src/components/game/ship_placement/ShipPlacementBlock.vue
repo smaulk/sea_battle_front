@@ -11,8 +11,7 @@ import CellCreator from "game/classes/CellCreator";
 import {CellsMatrix} from "game/interfaces/CellsMatrix";
 
 
-
-const emits = defineEmits(['update:cellsArray', 'update:shipsArray','update:placedShipsCount']);
+const emits = defineEmits(['update:cellsArray', 'update:shipsArray', 'update:placedShipsCount']);
 const {cellsArray, shipsArray, shipCounter} = defineProps({
   cellsArray: Array,
   shipsArray: Array,
@@ -26,7 +25,6 @@ const ships: Array<ShipData> = shipsArray as Array<ShipData>;
 watch(cells.value, () => {
   emits('update:cellsArray', cells.value)
 })
-
 
 
 let dragModule: DragModule;
@@ -100,7 +98,8 @@ const addEventsToWindow = (dragModuleInstance: DragModule) => {
 </script>
 
 <template>
-  <div class="d-flex align-items-center justify-content-center not-highlight row row-cols-1 row-cols-lg-2 gap-3 gap-lg-5">
+  <div
+      class="d-flex align-items-center justify-content-center not-highlight row row-cols-1 row-cols-lg-2 gap-3 gap-lg-5">
 
     <Battlefield v-model:cells="cellElements"/>
     <ShipContainer

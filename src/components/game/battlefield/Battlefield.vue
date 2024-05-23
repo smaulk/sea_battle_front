@@ -39,7 +39,7 @@ const getLetter = (i: number): string => {
 
 <style lang="scss">
 
-.battlefield__wait{
+.battlefield__wait {
   opacity: .6;
   pointer-events: none;
 }
@@ -75,23 +75,26 @@ $box-shadow-cell: 0 0 1px calc(var(--game-grid-cell-size) / 75) black;
     }
   }
 
-  .battlefield-cell__last{
+  .battlefield-cell__last {
     animation: pulse 2s infinite alternate;
   }
 
-  .battlefield-cell__miss{
+  .battlefield-cell__miss {
     .symbol {
       animation: appear-symbol 0.2s ease forwards; /* Применяем анимацию появления */
     }
   }
+
   .battlefield-cell__miss-auto {
     .symbol {
       animation: appear-symbol 1s ease forwards; /* Применяем анимацию появления */
     }
 
   }
+
   .battlefield-cell__miss, .battlefield-cell__miss-auto {
     background-color: darken($game-grid-cell-color, 5%);
+
     .symbol {
       width: 15%; /* Диаметр круга */
       height: 15%; /* Диаметр круга */
@@ -109,14 +112,14 @@ $box-shadow-cell: 0 0 1px calc(var(--game-grid-cell-size) / 75) black;
   }
 
   .battlefield-cell__destroyed {
-    .ship{
-      border: calc(var(--game-grid-cell-size)/15) solid red;
+    .ship {
+      border: calc(var(--game-grid-cell-size) / 15) solid red;
       cursor: default;
       animation: appear-ship 0.5s ease forwards; /* Применяем анимацию появления */
     }
   }
 
-  @keyframes appear-symbol{
+  @keyframes appear-symbol {
     from {
       transform: translate(-50%, -50%) scale(0); /* Начальное состояние: невидимый */
     }
@@ -145,17 +148,19 @@ $box-shadow-cell: 0 0 1px calc(var(--game-grid-cell-size) / 75) black;
       animation: appear-symbol 0.4s ease forwards; /* Применяем анимацию появления */
 
       &::before,
-      &::after{
+      &::after {
         content: ''; /* Пустое содержимое для псевдоэлементов */
         position: absolute; /* Абсолютное позиционирование */
         width: 100%; /* Ширина псевдоэлементов */
-        height: calc(var(--game-grid-cell-size)/15); /* Высота псевдоэлементов */
+        height: calc(var(--game-grid-cell-size) / 15); /* Высота псевдоэлементов */
         background-color: red; /* Цвет псевдоэлементов */
       }
-      &::before{
+
+      &::before {
         transform: rotate(45deg); /* Поворот первого псевдоэлемента */
       }
-      &::after{
+
+      &::after {
         transform: rotate(-45deg); /* Поворот второго псевдоэлемента */
 
       }

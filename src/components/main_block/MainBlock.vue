@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DifficultyLevel } from "game/enums/DifficultyLevel";
+import {DifficultyLevel} from "game/enums/DifficultyLevel";
 
 </script>
 

@@ -22,24 +22,24 @@ const randomPlacement = (): void => {
   emits('randomPlacement')
 }
 
-const shipsBySize = (size: number) : Array<ShipData> | null => {
-    if(getShipsBySize){
-      return getShipsBySize(size);
-    }
-    return null;
+const shipsBySize = (size: number): Array<ShipData> | null => {
+  if (getShipsBySize) {
+    return getShipsBySize(size);
+  }
+  return null;
 }
 const shipStyle = (shipId: number): Object | null => {
-  if(getShipStyle){
+  if (getShipStyle) {
     return getShipStyle(shipId);
   }
   return null;
 }
 
 const remainingCount = (size: number): number | null => {
-    if(getRemainingCount){
-      return getRemainingCount(size);
-    }
-    return null;
+  if (getRemainingCount) {
+    return getRemainingCount(size);
+  }
+  return null;
 }
 
 </script>
@@ -64,7 +64,7 @@ const remainingCount = (size: number): number | null => {
           v-on:touchstart.prevent="dragStartEvent($event, ship)"
       />
 
-      <span class="ship-count not-highlight">{{ remainingCount(size)}}</span>
+      <span class="ship-count not-highlight">{{ remainingCount(size) }}</span>
     </div>
     <button class="mt-3 btn btn-danger btn-random" @click="randomPlacement">
       Расставить случайно

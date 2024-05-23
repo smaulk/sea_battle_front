@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { GameStatus } from "game/enums/GameStatus";
+import {GameStatus} from "game/enums/GameStatus";
 
 const {gameInfo} = defineProps({
-   gameInfo: Number,
+  gameInfo: Number,
 })
 const emits = defineEmits(['reloadGame']);
 
