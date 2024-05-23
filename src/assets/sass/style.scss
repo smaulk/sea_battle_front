@@ -1,0 +1,62 @@
+@import "bootstrap";
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    background-color: $background-color;
+    color: $main-color;
+    font-family: $font-family;
+    overflow-x: hidden;
+
+    * {
+        font-family: $font-family;
+    }
+
+    #app{
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+.link{
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.button {
+    user-select: none;
+    cursor: pointer;
+    border: 0;
+}
+
+.not-highlight{
+    user-select: none;
+}
+
+.not-touchable{
+    pointer-events: none;
+}
+
+
+.btn-u{
+    @extend .btn;
+    color: $main-color;
+    background-color: $second-color;
+    border-radius: 10px;
+    font-weight: bold;
+    width: 100%;
+
+    &:hover{
+        color: $main-color;
+        background-color: lighten($second-color, 15%);
+    }
+
+    @media (min-width: 1920px) {
+        border-radius: 0.6vw;
+    }
+}

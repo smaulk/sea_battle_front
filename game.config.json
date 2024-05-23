@@ -1,0 +1,9 @@
+{
+  "countCells": 10,
+  "countShipsOfSize1": 4,
+  "countShipsOfSize2": 3,
+  "countShipsOfSize3": 2,
+  "countShipsOfSize4": 1,
+  "minBotWaitTimeMS": 1000,
+  "maxBotWaitTimeMS": 4000
+}
