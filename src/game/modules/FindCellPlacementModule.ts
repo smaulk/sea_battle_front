@@ -1,4 +1,4 @@
-import {getColRowData} from "./Functions.js";
+import {getColRowData} from "../utils";
 import {ColRowData} from "../interfaces/ColRowData";
 import {config} from "@/config";
 

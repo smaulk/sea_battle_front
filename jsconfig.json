@@ -1,7 +1,21 @@
 {
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "~bootstrap": [
+      "bootstrap"
+    ],
+      "assets/*": [
+        "./src/assets/*"
+      ],
+      "components/*": [
+        "./src/components/*"
+      ],
+      "game/*": [
+        "./src/game/*"
+      ]
     }
   },
   "exclude": ["node_modules", "dist"]

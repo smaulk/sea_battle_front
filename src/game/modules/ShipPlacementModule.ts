@@ -1,17 +1,16 @@
 import {ColRowData} from "../interfaces/ColRowData";
 import Ship from "../classes/Ship";
 import ShipPlaceValidationModule from "./ShipPlaceValidationModule";
-import {Position} from "../enums/Position";
 import Cell from "../classes/Cell";
 import {ShipData} from "../interfaces/ShipData";
-import {getEmptyCells, getStartCellShip} from "./Functions";
+import {getEmptyCells, getNewCellData, getStartCellShip} from "../utils";
 import CellCreator from "../classes/CellCreator";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
 
 export default class ShipPlacementModule {
 
     private readonly shipValidation: ShipPlaceValidationModule;
-    private _cells: CellsMatrix;
+    private readonly _cells: CellsMatrix;
     private _oldCell: Cell | null;
     private cellCreator: CellCreator;
 
@@ -34,19 +33,13 @@ export default class ShipPlacementModule {
         return false;
     }
 
-    private getNewCellData(cellData: ColRowData, position: Position, offset: number): ColRowData {
-        return {
-            col: position === Position.Horizontal ? cellData.col + offset : cellData.col,
-            row: position === Position.Vertical ? cellData.row + offset : cellData.row,
-        };
-    }
 
     private placeToCells(cell: Cell | null, ship: Ship | null): void {
         if (!cell || !ship) return;
         cell.appendShip(ship);
 
         for (let i = 0; i < ship.shipData.size; i++) {
-            const newCellData: ColRowData = this.getNewCellData(cell.cellData, ship.shipData.position, i);
+            const newCellData: ColRowData = getNewCellData(cell.cellData, ship.shipData.position, i);
             this.placeShip(this.cellCreator.create(newCellData), ship);
         }
     }
@@ -64,7 +57,7 @@ export default class ShipPlacementModule {
         if (!ship || !cell) return;
 
         for (let i = 0; i < ship.shipData.size; i++) {
-            const newCellData = this.getNewCellData(cell.cellData, ship.shipData.position, i);
+            const newCellData = getNewCellData(cell.cellData, ship.shipData.position, i);
             this.removeShip(this.cellCreator.create(newCellData));
         }
     }
@@ -100,7 +93,7 @@ export default class ShipPlacementModule {
         this._oldCell = cell;
 
         for (let i = 0; i < ship.shipData.size; i++) {
-            const newCellData: ColRowData = this.getNewCellData(cell.cellData, ship.shipData.position, i);
+            const newCellData: ColRowData = getNewCellData(cell.cellData, ship.shipData.position, i);
             const newCell: Cell | null = this.cellCreator.create(newCellData);
             if (newCell) newCell.setShipAllowed();
         }
@@ -110,7 +103,7 @@ export default class ShipPlacementModule {
         if (!this._oldCell) return;
 
         for (let i = 0; i < ship.shipData.size; i++) {
-            const newCellData: ColRowData = this.getNewCellData(this._oldCell.cellData, ship.shipData.position, i);
+            const newCellData: ColRowData = getNewCellData(this._oldCell.cellData, ship.shipData.position, i);
             const newCell: Cell | null = this.cellCreator.create(newCellData);
             if(newCell) newCell.removeShipAllowed();
         }

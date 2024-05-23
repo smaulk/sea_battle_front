@@ -1,6 +1,6 @@
 import {ShipData} from "../interfaces/ShipData";
 import {ColRowData} from "../interfaces/ColRowData";
-import {getColRowData} from "../modules/Functions";
+import {getColRowData} from "../utils";
 import FindCellPlacementModule from "../modules/FindCellPlacementModule";
 import {Position} from "../enums/Position";
 

@@ -1,5 +1,5 @@
 import {ShipData} from "../interfaces/ShipData";
-import {getEmptyCells, getRandomInt} from "./Functions";
+import {getEmptyCells, getRandomInt} from "../utils";
 import {Position} from "../enums/Position";
 import {ColRowData} from "../interfaces/ColRowData";
 import ShipPlaceValidationModule from "./ShipPlaceValidationModule";

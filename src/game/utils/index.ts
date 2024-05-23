@@ -1,8 +1,8 @@
-import {ColRowData} from "../interfaces/ColRowData";
-import {config} from "@/config";
-import {ShipData} from "../interfaces/ShipData";
-import {Position} from "../enums/Position";
-import {CellsMatrix} from "../interfaces/CellsMatrix";
+import {ColRowData} from "../interfaces/ColRowData.ts";
+import {config} from "@/config.ts";
+import {ShipData} from "../interfaces/ShipData.ts";
+import {Position} from "../enums/Position.ts";
+import {CellsMatrix} from "../interfaces/CellsMatrix.ts";
 
 function getColRowData(elem: HTMLDivElement): ColRowData | null {
     return Object.keys(elem.dataset).length !== 0
@@ -78,22 +78,25 @@ function getShipCells(startCellData: ColRowData, shipData: ShipData): Array<ColR
     const shipCells: Array<ColRowData> = [];
 
     for (let i = 0; i < shipData.size; i++) {
-        let newCellData: ColRowData = {
-            col: shipData.position === Position.Horizontal ? startCellData.col + i : startCellData.col,
-            row: shipData.position === Position.Vertical ? startCellData.row + i : startCellData.row,
-        };
-
+        const newCellData: ColRowData = getNewCellData(startCellData, shipData.position, i);
         shipCells.push(newCellData);
     }
 
     return shipCells;
 }
 
+function getNewCellData(cellData: ColRowData, position: Position, offset: number): ColRowData {
+    return {
+        col: position === Position.Horizontal ? cellData.col + offset : cellData.col,
+        row: position === Position.Vertical ? cellData.row + offset : cellData.row,
+    };
+}
+
 function getStartCellShip(cells: CellsMatrix, shipId: number): ColRowData | null {
     for (let row: number = 0; row < cells.length; row++) {
         const col: number = cells[row].indexOf(shipId);
         if (col !== -1) {
-            return { row, col };
+            return {row, col};
         }
     }
     return null;
@@ -109,4 +112,5 @@ export {
     getAroundCells,
     getShipCells,
     getStartCellShip,
+    getNewCellData,
 }

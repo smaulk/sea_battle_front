@@ -1,6 +1,6 @@
 import type {ShipData} from "../interfaces/ShipData";
 import {ColRowData} from "../interfaces/ColRowData";
-import {getAroundCells, getShipCells, isValidIndex} from "./Functions";
+import {getAroundCells, getShipCells, isValidIndex} from "../utils";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
 
 export default class ShipPlaceValidationModule {

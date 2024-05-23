@@ -3,7 +3,7 @@
 import BattlefieldBlock from "components/game/battlefield/Battlefield.vue";
 import {onMounted, ref} from "vue";
 import ShipPlacementModule from "game/modules/ShipPlacementModule.ts";
-import {getEmptyCells} from "game/modules/Functions";
+import {getEmptyCells} from "game/utils";
 import Ship from "components/game/battlefield/Ship.vue";
 import BotModule from "game/modules/BotModule";
 import GameModule from "game/modules/GameModule";

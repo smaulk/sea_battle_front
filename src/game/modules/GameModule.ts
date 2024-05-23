@@ -7,7 +7,7 @@ import {
     getRandomInt,
     getShipCells,
     getStartCellShip
-} from "./Functions";
+} from "../utils";
 import {ColRowData} from "../interfaces/ColRowData";
 import Cell from "../classes/Cell";
 import Ship from "../classes/Ship";

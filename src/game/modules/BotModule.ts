@@ -1,5 +1,5 @@
 import {ShipData} from "@/game/interfaces/ShipData";
-import {compareNum, equalColRowData, getEmptyCells, getRandomInt, getStartCellShip} from "@/game/modules/Functions";
+import {compareNum, equalColRowData, getEmptyCells, getRandomInt, getStartCellShip} from "game/utils";
 import {ColRowData} from "@/game/interfaces/ColRowData";
 import {BotHitData, HitData} from "game/interfaces/HitData.ts";
 import {HitStatus} from "@/game/enums/HitStatus";
@@ -23,13 +23,16 @@ export default class BotModule {
         this._userCells = getEmptyCells();
 
         this._hitsOnBotShips = [];
-        for (let ship of botShips) {
+        botShips.forEach((ship: ShipData) => {
             this._hitsOnBotShips[ship.id] = 0;
-        }
+        })
 
         this.difficultyLevel = difficultyLevel;
     }
 
+    /*
+        Возвращает клетку, в которую бот сделал выстрел.
+     */
     public getCellToHit(): ColRowData | null {
         const historyLength = this.historyHitCells.length;
 
@@ -65,6 +68,9 @@ export default class BotModule {
         return this.getRandomCellForShipHit(firstHitCell.cell);
     }
 
+    /*
+        Получить ближайшую клетку
+     */
     private getNearbyCell(cell1: ColRowData, cell2: ColRowData): ColRowData {
         return {
             col: cell1.col + compareNum(cell1.col, cell2.col),
@@ -72,6 +78,9 @@ export default class BotModule {
         };
     }
 
+    /*
+        Получить случайную соседнюю клетку для выстрела.
+     */
     private getRandomCellForShipHit(cellData: ColRowData): ColRowData | null {
         // Создаем список соседних клеток
         let neighbors = [
@@ -96,7 +105,9 @@ export default class BotModule {
         return null;
     }
 
-    // Функция для перемешивания массива (алгоритм Fisher-Yates)
+    /*
+    Функция для перемешивания массива (алгоритм Fisher-Yates)
+     */
     private shuffle(array: any[]): any[] {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -105,6 +116,9 @@ export default class BotModule {
         return array;
     }
 
+    /*
+        Получить случайную не отстреленную клетку на поле.
+     */
     private getRandomCell(): ColRowData {
         const size = this._userCells.length;
 
@@ -125,12 +139,18 @@ export default class BotModule {
         return cellData;
     }
 
+    /*
+        Проверка, что в клетку игрока стреляли. Если стреляли - true, иначе - false. Если клетка не существует - true.
+     */
     private checkCellIsHit(cellData: ColRowData): boolean {
         return (cellData.col < 0 || cellData.row < 0 || cellData.col >= this._userCells.length
             || cellData.row >= this._userCells.length) ? true
             : this._userCells[cellData.row][cellData.col] !== null;
     }
 
+    /*
+        Записать, что в клетку игрока был совершен выстрел.
+     */
     private setCellIsHit(cellData: ColRowData): void {
         this._userCells[cellData.row][cellData.col] = 1;
     }
@@ -153,6 +173,9 @@ export default class BotModule {
         }
     }
 
+    /*
+        Выстрел по клетке бота.
+     */
     public hitOnBotCell(cellData: ColRowData): HitData {
         const shipId = this.getShipInBotCell(cellData)
         if (shipId) {
@@ -179,6 +202,9 @@ export default class BotModule {
         };
     }
 
+    /*
+        Получить id корабля в клетке бота. Либо id корабля, либо null.
+     */
     private getShipInBotCell(cellData: ColRowData): number | null {
         return this._botCells[cellData.row][cellData.col];
     }

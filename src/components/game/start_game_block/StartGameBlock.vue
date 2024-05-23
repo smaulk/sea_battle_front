@@ -2,7 +2,7 @@
 
 import {onBeforeMount, ref} from "vue";
 import ShipPlacementBlock from "components/game/ship_placement/ShipPlacementBlock.vue";
-import {getEmptyCells} from "game/modules/Functions";
+import {getEmptyCells} from "game/utils";
 import ShipsCounter from "game/classes/ShipsCounter";
 import {ShipData} from "game/interfaces/ShipData";
 import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
