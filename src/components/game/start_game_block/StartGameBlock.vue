@@ -14,8 +14,8 @@ const {difficultyLevel} = defineProps({
 
 const emits = defineEmits(['startGame'])
 
-const cells: CellsMatrix = [];
-const ships: Array<ShipData> = [];
+let cells: CellsMatrix = [];
+let ships: Array<ShipData> = [];
 
 const checkFilled = () => {
   isFilled.value = shipsCounter.isAllPlaced();
