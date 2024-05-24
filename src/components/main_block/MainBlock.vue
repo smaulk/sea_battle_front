@@ -37,7 +37,6 @@ import {DifficultyLevel} from "game/enums/DifficultyLevel";
        target="_blank">
       Информация об игре
     </a>
-
   </div>
 
 </template>

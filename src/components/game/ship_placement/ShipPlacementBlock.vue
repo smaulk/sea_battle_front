@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {onMounted, Ref, ref, watch} from "vue";
-import FindCellPlacementModule from "game/modules/FindCellPlacementModule.js";
+import FindCellModule from "game/modules/FindCellModule.ts";
 import {ShipData} from "game/interfaces/ShipData";
 import DragModule from "game/modules/DragModule";
 import ShipPlacementModule from "game/modules/ShipPlacementModule";
@@ -32,7 +32,7 @@ const shipsCounter: ShipsCounter = shipCounter as ShipsCounter;
 onMounted(() => {
   dragModule = new DragModule(
       new ShipPlacementModule(cells.value, new CellCreator(cellElements.value)),
-      new FindCellPlacementModule(cellElements.value),
+      new FindCellModule(cellElements.value),
       shipsCounter,
       ships,
       dragLeft,

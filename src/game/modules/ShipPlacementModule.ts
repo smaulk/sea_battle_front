@@ -7,6 +7,9 @@ import {getEmptyCells, getNewCellData, getStartCellShip} from "../utils";
 import CellCreator from "../classes/CellCreator";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
 
+/*
+    Модуль, отвечающий за размещение кораблей на поле.
+ */
 export default class ShipPlacementModule {
 
     private readonly shipValidation: ShipPlaceValidationModule;
@@ -21,7 +24,11 @@ export default class ShipPlacementModule {
         this.cellCreator = cellCreator;
     }
 
+    /*
+        Размещение корабля в клетке с проверкой возможности размещения.
 
+        При успешном размещении - true, при неудаче - false;
+     */
     public placeShipToCell(cellData: ColRowData, ship: Ship): boolean {
         const cell: Cell | null = this.cellCreator.create(cellData);
         if (!ship || !cell) return false;
@@ -33,7 +40,9 @@ export default class ShipPlacementModule {
         return false;
     }
 
-
+    /*
+        Размещение корабля в клетках.
+     */
     private placeToCells(cell: Cell | null, ship: Ship | null): void {
         if (!cell || !ship) return;
         cell.appendShip(ship);
@@ -44,14 +53,18 @@ export default class ShipPlacementModule {
         }
     }
 
-
+    /*
+        Установка наличия кораблей в клетке.
+     */
     private placeShip(cell: Cell | null, ship: Ship): void {
         if (!cell || !ship) return;
         cell.setCellClassShip();
         this.setShipIdInCell(cell, ship.shipData.id)
     }
 
-
+    /*
+        Удаление корабля из клеток.
+     */
     public removeShipFromCell(cellData: ColRowData, ship: Ship): void {
         const cell = this.cellCreator.create(cellData);
         if (!ship || !cell) return;
@@ -62,24 +75,31 @@ export default class ShipPlacementModule {
         }
     }
 
+    /*
+        Удаление корабля из клетки
+     */
     private removeShip(cell: Cell | null): void {
         if (!cell) return;
         this.setShipIdInCell(cell, null);
         cell.setCellClassEmpty();
     }
 
-
+    /*
+        Запись id корабля в матрицу клеток.
+     */
     private setShipIdInCell(cell: Cell, shipId: number | null): void {
         this._cells[cell.cellData.row][cell.cellData.col] = shipId;
     }
 
-
-    public placeShipCheck(cellData: ColRowData, ship: Ship): boolean {
+    /*
+        Отображение возможных для размещения корабля клеток, либо отображение невозможности размещения.
+     */
+    public checkShipPlacing(cellData: ColRowData, ship: Ship): boolean {
         const cell = this.cellCreator.create(cellData);
         if (!ship || !cell) return false;
 
         if (cell.isValidPlace(this.shipValidation, ship)) {
-            this.placeShipAllowed(cell, ship)
+            this.setAllowedCells(cell, ship)
             ship.setClassAllowed()
             return true;
         }
@@ -88,8 +108,10 @@ export default class ShipPlacementModule {
         return false;
     }
 
-
-    private placeShipAllowed(cell: Cell, ship: Ship): void {
+    /*
+        Отображение клеток, в которых можно разместить корабли.
+     */
+    private setAllowedCells(cell: Cell, ship: Ship): void {
         this._oldCell = cell;
 
         for (let i = 0; i < ship.shipData.size; i++) {
@@ -99,7 +121,10 @@ export default class ShipPlacementModule {
         }
     }
 
-    public removeShipAllowed(ship: Ship): void {
+    /*
+        Очистка клеток, которые были помечены как возможные для размещения клеток.
+     */
+    public removeAllowedCells(ship: Ship): void {
         if (!this._oldCell) return;
 
         for (let i = 0; i < ship.shipData.size; i++) {
@@ -109,14 +134,19 @@ export default class ShipPlacementModule {
         }
     }
 
-    private clearCellsArray(): void {
+    /*
+        Очистка матрицы клеток.
+     */
+    private clearCellsMatrix(): void {
         this._cells.splice(0, this._cells.length, ...getEmptyCells());
     }
 
-
+    /*
+        Размещение кораблей на поле из матрицы клеток.
+     */
     public placeShipsFromCells(cells: CellsMatrix, ships: Array<ShipData>): void {
         if (!cells || !ships) return;
-        this.clearCellsArray();
+        this.clearCellsMatrix();
 
         const placedShips = new Set<number | null>();
 

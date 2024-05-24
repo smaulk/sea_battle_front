@@ -1,12 +1,6 @@
 import {ShipData} from "../interfaces/ShipData";
 import {
-    equalColRowData,
-    getAroundCells,
-    getColRowData,
-    getEmptyCells,
-    getRandomInt,
-    getShipCells,
-    getStartCellShip
+    equalColRowData, getAroundCells, getColRowData, getEmptyCells, getRandomInt, getShipCells, getStartCellShip
 } from "../utils";
 import {ColRowData} from "../interfaces/ColRowData";
 import Cell from "../classes/Cell";
@@ -20,6 +14,11 @@ import {HitStatus} from "../enums/HitStatus";
 import ShipsCounter from "../classes/ShipsCounter";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
 
+/*
+    Модуль, отвечающий за игровую логику, взаимодействие с пользователем и ботом.
+
+    Главный модуль, работающий с остальными модулями.
+ */
 export default class GameModule {
     //Клетки и корабли игрока
     private readonly _selfCells: CellsMatrix;
@@ -174,17 +173,21 @@ export default class GameModule {
     /*
         Проверить, нажата ли кнопка, и есть ли попадание.
      */
-
     private checkClickedCells(cellData: ColRowData): number | null {
         return this._rivalClickedCells[cellData.row][cellData.col];
     }
 
-
+    /*
+        Отобразить уничтоженный корабль противника.
+     */
     private setRivalShipDestroyed(startCellData: ColRowData, shipData: ShipData): void {
         this.addClassDoneToCellsRival(startCellData, shipData);
         this.addClassMissToCellsRival(startCellData, shipData);
     }
 
+    /*
+        Установить клетки противника в качестве уничтоженных.
+     */
     private addClassDoneToCellsRival(startCellData: ColRowData, shipData: ShipData): void {
         const shipCells = getShipCells(startCellData, shipData);
         for (let cellData of shipCells) {
@@ -193,10 +196,12 @@ export default class GameModule {
         }
     }
 
-
+    /*
+        Установить клетки противника в качестве промахов.
+     */
     private addClassMissToCellsRival(startCellData: ColRowData, shipData: ShipData): void {
         const emptyCells = this.getShipEmptyCellsFiltered(startCellData, shipData);
-        for (let cellData of emptyCells) {
+        for (const cellData of emptyCells) {
             const cell = this.rivalCellCreator.create(cellData);
             if (cell) {
                 cell.setCellClassMissAuto();
@@ -205,12 +210,17 @@ export default class GameModule {
         }
     }
 
-
+    /*
+        Установить корабль пользователя в качестве уничтоженного.
+     */
     private setSelfShipDestroyed(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
         this.addClassDoneToCellsSelf(startCellData, shipData);
         return this.addClassMissToCellsSelf(startCellData, shipData);
     }
 
+    /*
+        Установить клетки пользователя в качестве уничтоженных
+     */
     private addClassDoneToCellsSelf(startCellData: ColRowData, shipData: ShipData): void {
         const shipCells = getShipCells(startCellData, shipData);
         for (let cellData of shipCells) {
@@ -219,7 +229,9 @@ export default class GameModule {
         }
     }
 
-
+    /*
+        Установить клетки пользователя в качестве промахов и вернуть массив данных клеток.
+     */
     private addClassMissToCellsSelf(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
         const emptyCells = this.getShipEmptyCellsFiltered(startCellData, shipData);
         for (let cellData of emptyCells) {
@@ -230,10 +242,16 @@ export default class GameModule {
     }
 
 
+    /*
+        Получить id корабля в данной клетке или null.
+     */
     private getShipInSelfCell(cellData: ColRowData): number | null {
         return this._selfCells[cellData.row][cellData.col];
     }
 
+    /*
+        Выстрел по клетке пользователя.
+     */
     public hitOnSelfCell(cellData: ColRowData): BotHitData | null {
         const cell = this.selfCellCreator.create(cellData);
         if (!cell) return null;
@@ -274,40 +292,41 @@ export default class GameModule {
         };
     }
 
-
+    /*
+        Получить массив пустых клеток вокруг корабля, не включающий клетки самого корабля.
+     */
     private getShipEmptyCellsFiltered(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
-        const filteredCells: Array<ColRowData> = [];
-        const shipCells = getShipCells(startCellData, shipData);
-
-        const isUnique = (cellData: ColRowData) => !filteredCells.some(cell => equalColRowData(cell, cellData));
+        const shipCells: Array<ColRowData> = getShipCells(startCellData, shipData);
+        const emptyCells: Set<ColRowData> = new Set<ColRowData>();
 
         shipCells.forEach(shipCell => {
-            const emptyCells = getAroundCells(shipCell);
-            emptyCells.forEach(cell => {
-                if (isUnique(cell)) filteredCells.push(cell);
+            getAroundCells(shipCell).forEach(cell => {
+                if (!shipCells.some(shipCell => equalColRowData(cell, shipCell))) {
+                    emptyCells.add(cell);
+                }
             });
         });
 
-        return filteredCells.filter(cellData => !shipCells.some(shipCell => equalColRowData(cellData, shipCell)));
+        return Array.from(emptyCells);
     }
 
 
     /*
-    Игровой переключатель.
-    Ожидает ходы пользователя и запускает ходы бота.
+        Игровой переключатель.
+        Ожидает ходы пользователя и запускает ходы бота.
      */
     public async gameHandler(event: Event): Promise<GameStatus | null> {
         if (!this.isCanClick) return null;
 
         const isSelfHit = this.hitOnRivalCell(event.target as HTMLDivElement);
         if (isSelfHit) {
-            return this.checkDestroyedShips();
+            return this.getGameStatus();
         }
 
         const botHit = async (): Promise<GameStatus> => {
             return new Promise((resolve) => {
                 this.isCanClick = false;
-
+                //Выполнение следующего кода с задержкой
                 setTimeout(async () => {
                     const cellData: ColRowData | null = this.botModule.getCellToHit();
                     if (!cellData) return;
@@ -316,7 +335,7 @@ export default class GameModule {
 
                     this.botModule.setRivalHitData(cellData, RivalHitData);
                     if (RivalHitData.hit) {
-                        const gameInfo = this.checkDestroyedShips();
+                        const gameInfo = this.getGameStatus();
                         if (gameInfo) {
                             this.isCanClick = false;
                             resolve(gameInfo);
@@ -335,12 +354,17 @@ export default class GameModule {
         return await botHit();
     }
 
-
-    private checkDestroyedShips(): GameStatus {
+    /*
+        Получение статуса игры.
+     */
+    private getGameStatus(): GameStatus {
+        //Если все корабли противника уничтожены
         if (this.rivalShipsCounter.isAllPlaced()) {
             this.isCanClick = false;
             return GameStatus.UserWin;
-        } else if (this._selfShipsDestroyed === this._selfShips.length) {
+        }
+        //Если все корабли пользователя уничтожены.
+        else if (this._selfShipsDestroyed === this._selfShips.length) {
             this.isCanClick = false;
             return GameStatus.RivalWin;
         }

@@ -2,10 +2,14 @@ import {getColRowData} from "../utils";
 import {ColRowData} from "../interfaces/ColRowData";
 import {config} from "@/config";
 
+/*
+    Модуль, отвечающий за поиск клетки в координатах курсора.
+ */
+export default class FindCellModule {
 
-export default class FindCellPlacementModule {
-
+    //Количество клеток в ряду
     private readonly cellCount: number;
+    //Массив HTML элементов клеток
     private readonly cellElements: Array<HTMLDivElement>;
 
     constructor(cellElements: Array<HTMLDivElement>) {
@@ -13,16 +17,23 @@ export default class FindCellPlacementModule {
         this.cellElements = cellElements;
     }
 
-
+    /*
+        Получить данные клетки в текущих координатах.
+        @param event Event при перемещении
+        @param shipElem HTML элемент корабля
+     */
     public findCellToPlace(event: MouseEvent | TouchEvent, shipElem: HTMLDivElement): ColRowData | null {
         const idY = this.findOnY(event, shipElem);
+        //Если ряд клетки найден
         if (idY !== null) {
-
             return this.findOnX(event, shipElem, idY);
         }
         return null;
     }
 
+    /*
+        Поиск ряда клетки (поиск по оси Y).
+     */
     private findOnY(event: MouseEvent | TouchEvent, shipElem: HTMLDivElement): number | null {
         const cellRefs = this.cellElements;
         const rect = shipElem.getBoundingClientRect();
@@ -46,6 +57,9 @@ export default class FindCellPlacementModule {
         return null;
     }
 
+    /*
+        Поиск клетки в данном ряду (поиск по оси X).
+    */
     private findOnX(event: MouseEvent | TouchEvent, shipElem: HTMLDivElement, yId: number): ColRowData | null {
         const cellRefs = this.cellElements;
         const rect = shipElem.getBoundingClientRect();

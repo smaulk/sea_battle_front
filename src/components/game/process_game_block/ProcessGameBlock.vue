@@ -46,7 +46,7 @@ onMounted(() => {
   shipPlacementModule.placeShipsFromCells(cellsArray as CellsMatrix, shipsArray as Array<ShipData>);
 
   const battlefieldData: BattlefieldData = new RandomCellsModule()
-      .getBattlefieldData(new ShipsCounter().getShipsArray()) as BattlefieldData;
+      .getRandomBattlefieldData(new ShipsCounter().getShipsArray()) as BattlefieldData;
   botModule = new BotModule(
       battlefieldData.cells,
       battlefieldData.ships,

@@ -3,6 +3,10 @@ import {ShipData} from "../interfaces/ShipData";
 import {Position} from "../enums/Position";
 import {reactive} from "vue";
 
+/*
+    Класс, отвечающий за подсчет количества кораблей (размещенных и оставшихся),
+     а также за создание дефолтного массива кораблей.
+ */
 export default class ShipsCounter {
     get count(): Object {
         return this._countOfPlaced;
@@ -31,6 +35,7 @@ export default class ShipsCounter {
 
     }
 
+    /* Получение объекта с дефолтным количеством кораблей. */
     private getDefaultShipCount() {
         return reactive({
             4: this.shipsOfSize4,
@@ -40,37 +45,40 @@ export default class ShipsCounter {
         });
     }
 
-
+    /* Увеличить количество оставшихся кораблей */
     public incrementRemaining(shipSize: number): void {
         this._countOfRemaining[shipSize]++;
     }
-
+    /* Уменьшить количество оставшихся кораблей */
     public decrementRemaining(shipSize: number): void {
         this._countOfRemaining[shipSize]--;
     }
-
+    /* Увеличить количество размещенных кораблей */
     public incrementPlaced(): void {
         this._countOfPlaced++;
     }
-
-    public isAllPlaced() {
+    /* Проверка, что все корабли расставлены*/
+    public isAllPlaced(): boolean {
         return this._countOfPlaced === this.countShips;
     }
-
+    /* Получить количество оставшихся кораблей */
     public getRemainingCount(shipSize: number): number {
         return this._countOfRemaining[shipSize];
     }
-
+    /* Установить все корабли в качестве размещенных */
     public setAllPlaced() {
         for (let i = 1; i <= 4; i++) this._countOfRemaining[i] = 0;
         this._countOfPlaced = this.countShips;
     }
-
+    /* Установить все корабли в качестве оставшихся */
     public setAllRemaining() {
         this._countOfRemaining = this.getDefaultShipCount();
         this._countOfPlaced = 0;
     }
 
+    /*
+        Получить дефолтный массив кораблей.
+     */
     public getShipsArray(): Array<ShipData> {
         let ships: Array<ShipData> = [];
         let id: number = 1; // Начальный идентификатор для кораблей

@@ -4,6 +4,10 @@ import {ShipData} from "../interfaces/ShipData.ts";
 import {Position} from "../enums/Position.ts";
 import {CellsMatrix} from "../interfaces/CellsMatrix.ts";
 
+/*
+    Получить объект типа {col, row} из HTML элемента клетки
+    @param elem HTML элемент клетки
+ */
 function getColRowData(elem: HTMLDivElement): ColRowData | null {
     return Object.keys(elem.dataset).length !== 0
         ? {
@@ -13,10 +17,16 @@ function getColRowData(elem: HTMLDivElement): ColRowData | null {
         : null;
 }
 
+/*
+    Проверка равенства двух клеток типа {col, row}
+ */
 function equalColRowData(data1: ColRowData, data2: ColRowData): boolean {
     return data1.row === data2.row && data1.col === data2.col;
 }
 
+/*
+    Получить матрицу из пустых клеток, заполненных null
+ */
 function getEmptyCells(): CellsMatrix {
     const count = config.countCells;
     const cells: CellsMatrix = [];
@@ -26,22 +36,33 @@ function getEmptyCells(): CellsMatrix {
     return cells;
 }
 
-
+/*
+    Получить случайное число типа int
+ */
 function getRandomInt(max: number): number {
     return Math.floor(Math.random() * max);
 }
 
-//0 - если равны, 1 если num1 > num2, -1 если num1 < num2
+/*
+    Сравнение чисел
+
+    0 - если равны, 1 если num1 > num2, -1 если num1 < num2
+ */
 function compareNum(num1: number, num2: number): 0 | 1 | -1 {
     return (num1 === num2) ? 0
         : (num1 > num2 ? 1 : -1);
 }
 
-
+/*
+    Проверка, что индекс клетки правильный, и она существует
+ */
 function isValidIndex(index: number): boolean {
     return index >= 0 && index < config.countCells;
 }
 
+/*
+    Получить массив клеток, расположенных вокруг данной клетки.
+ */
 function getAroundCells(cellData: ColRowData): Array<ColRowData> {
     const cells: Array<ColRowData> = []
 
@@ -53,12 +74,11 @@ function getAroundCells(cellData: ColRowData): Array<ColRowData> {
                 row: cellData.row + rowOffset
             }
             cells.push(newCellData);
-
         }
         return true;
     }
 
-    const cellsAround = [
+    const cellsAround: number[][] = [
         [-1, -1],
         [-1, 0],
         [-1, 1],
@@ -74,6 +94,11 @@ function getAroundCells(cellData: ColRowData): Array<ColRowData> {
     return cells;
 }
 
+/*
+    Получить массив клеток, на которых расположен корабль.
+    @param startCellData Первая клетка корабля
+    @param shipData Данные корабля
+ */
 function getShipCells(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
     const shipCells: Array<ColRowData> = [];
 
@@ -85,6 +110,12 @@ function getShipCells(startCellData: ColRowData, shipData: ShipData): Array<ColR
     return shipCells;
 }
 
+/*
+    Получить следующую клетку, в зависимости от расположения корабля.
+    @param cellData Данные клетки
+    @param position Позиция корабля
+    @param offset На сколько изменить координату
+ */
 function getNewCellData(cellData: ColRowData, position: Position, offset: number): ColRowData {
     return {
         col: position === Position.Horizontal ? cellData.col + offset : cellData.col,
@@ -92,6 +123,9 @@ function getNewCellData(cellData: ColRowData, position: Position, offset: number
     };
 }
 
+/*
+    Получить первую клетку, на которой расположен корабль.
+ */
 function getStartCellShip(cells: CellsMatrix, shipId: number): ColRowData | null {
     for (let row: number = 0; row < cells.length; row++) {
         const col: number = cells[row].indexOf(shipId);

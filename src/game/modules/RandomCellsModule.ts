@@ -1,12 +1,14 @@
 import {ShipData} from "../interfaces/ShipData";
-import {getEmptyCells, getRandomInt} from "../utils";
+import {getEmptyCells, getNewCellData, getRandomInt} from "../utils";
 import {Position} from "../enums/Position";
 import {ColRowData} from "../interfaces/ColRowData";
 import ShipPlaceValidationModule from "./ShipPlaceValidationModule";
 import {BattlefieldData} from "../interfaces/BattlefieldData";
 import {CellsMatrix} from "../interfaces/CellsMatrix";
 
-
+/*
+    Модуль, отвечающий за случайную расстановку кораблей на поле.
+ */
 export default class RandomCellsModule {
 
     private _cells: CellsMatrix;
@@ -19,9 +21,13 @@ export default class RandomCellsModule {
         this.validationModule = new ShipPlaceValidationModule(this._cells);
     }
 
-
-    public getBattlefieldData(ships: Array<ShipData>): BattlefieldData | null {
+    /*
+        Получить случайные данные поля (матрица клеток и массив кораблей)
+        @param ships Массив кораблей, которые будут расставлены случайным образом
+     */
+    public getRandomBattlefieldData(ships: Array<ShipData>): BattlefieldData | null {
         this._ships = ships;
+        //Делаем 1000 попыток, пока не получится расставить все корабли
         for (let attempt = 0; attempt < 1000; attempt++) {
             if (this.placeAllShips()) {
                 return {
@@ -34,6 +40,10 @@ export default class RandomCellsModule {
         return null;
     }
 
+    /*
+        Расставить на поле все корабли.
+        @return boolean true если удалось расставить все корабли, и false если не удалось
+     */
     private placeAllShips(): boolean {
         for (let i = 0; i < this._ships.length; i++) {
             if (!this.placeShip(i)) {
@@ -43,38 +53,52 @@ export default class RandomCellsModule {
         return true;
     }
 
+    /*
+        Поставить корабль на поле.
+        @param i Элемент массива _ships
+        @return  true если удалось поставить корабль
+        @return false если не удалось поставить корабль
+     */
     private placeShip(i: number): boolean {
-        let attempts = 50;
-        while (attempts-- > 0) {
-            const {col, row, position} = this.getRandomPosition();
+        //Делаем 50 попыток расставить корабль на поле
+        for (let attempt = 0; attempt < 50; attempt++) {
+            const {cellData, position} = this.getRandomPosition();
             this._ships[i] = {...this._ships[i], position};
-            if (this.validationModule.checkCellsForPlacement(this._ships[i], {col, row})) {
-                this.setShip(this._ships[i], {col, row});
+            if (this.validationModule.checkCellForPlacement(this._ships[i], cellData)) {
+                this.setShipToMatrix(this._ships[i], cellData);
                 return true;
             }
         }
         return false;
     }
 
-    private getRandomPosition(): { col: number, row: number, position: Position } {
-        const size = this._cells.length;
-        const col = getRandomInt(size);
-        const row = getRandomInt(size);
+    /*
+        Получить случайную клетку и позицию корабля
+     */
+    private getRandomPosition(): { cellData: ColRowData, position: Position } {
+        const cellData: ColRowData = {
+            col: getRandomInt(this._cells.length),
+            row: getRandomInt(this._cells.length)
+        }
         const position = Math.random() > 0.5 ? Position.Horizontal : Position.Vertical;
-        return {col, row, position};
+
+        return {cellData, position};
     }
 
-    private setShip(ship: ShipData, start: ColRowData): void {
+    /*
+        Записать корабль в матрицу клеток.
+     */
+    private setShipToMatrix(ship: ShipData, startCellData: ColRowData): void {
         for (let i = 0; i < ship.size; i++) {
-            const col = ship.position === Position.Horizontal ? start.col + i : start.col;
-            const row = ship.position === Position.Vertical ? start.row + i : start.row;
-            this._cells[row][col] = ship.id;
+            const cellData = getNewCellData(startCellData, ship.position, i);
+            this._cells[cellData.row][cellData.col] = ship.id;
         }
     }
 
+    /*
+        Очистить матрицу клеток.
+     */
     private resetCells(): void {
         this._cells = getEmptyCells();
     }
-
-
 }
