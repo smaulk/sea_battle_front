@@ -1,3 +1,4 @@
+//Общие данные
 $font-family: "Proxima Nova ExCn Rg";
 $background-color: #1D1E1D;
 $light-background-color: lighten($background-color, 60%);
@@ -6,35 +7,30 @@ $second-color: #346450;
 $third-color: black;
 $important-color: #dc3545;
 
+//Данные шапки
 $header-main-color: white;
 $header-second-color: #346450;
 $header-border-color: lighten($header-second-color, 10%);
 $font-size-header: 30px;
+
 $font-size-log: 16px;
 
+//Данные клеток
 $game-grid-cell-count: 10;
 $game-grid-header-color: lighten($second-color, 20);
 $game-grid-header-text-color: black;
 $game-grid-cell-color: #e5f1f4;
 $game-grid-cell-border: 1px solid #9393b8;
 
-$ship-color: rgb(37, 27, 193);
 
-$navbar-toggler-border-radius: 10px;
-
-$modal-content-bg: $background-color;
-$modal-header-border-color: black;
-$modal-header-border-width: 2px;
-$modal-header-padding-y: 8px;
-$modal-header-padding-x: 20px;
-
-
+//Картинки кораблей в горизонтальном виде
 $ships-h:(
         4:url('assets/images/ships/four_h.svg'),
         3:url('assets/images/ships/triple_h.svg'),
         2: url('assets/images/ships/double_h.svg'),
         1: url('assets/images/ships/single_h.svg'),
 );
+//Картинки кораблей в вертикальном виде
 $ships-v:(
         4:url('assets/images/ships/four_v.svg'),
         3:url('assets/images/ships/triple_v.svg'),
@@ -43,7 +39,8 @@ $ships-v:(
 );
 
 
-:root {
+:root{
+  //Размер клетки
   --game-grid-cell-size: 30px;
 
   @media (min-width: 768px) {

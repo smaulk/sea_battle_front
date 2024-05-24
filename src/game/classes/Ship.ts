@@ -65,7 +65,7 @@ export default class Ship {
         return this._shipHtmlElem.classList.contains('dragging');
     }
 
-    /* Получение данных клетки, в которой находится корабль */
+    /* Получить данные клетки, в которой находится корабль */
     public getCurrentColRowData(): ColRowData | null {
         const parent: HTMLDivElement = this._shipHtmlElem.offsetParent as HTMLDivElement;
         return getColRowData(parent);

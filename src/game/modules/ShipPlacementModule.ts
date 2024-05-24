@@ -14,6 +14,7 @@ export default class ShipPlacementModule {
 
     private readonly shipValidation: ShipPlaceValidationModule;
     private readonly _cells: CellsMatrix;
+    //Клетка, которая была использована для проверки размещения корабля
     private _oldCell: Cell | null;
     private cellCreator: CellCreator;
 

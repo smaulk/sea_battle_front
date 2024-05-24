@@ -74,6 +74,9 @@ onMounted(() => {
 
 const gameInfo = ref(GameStatus.InProgress);
 
+/*
+  Обработка нажатия на клетку противника.
+*/
 const clickEnemyCell = async (event: Event) => {
   const info: GameStatus | null = await gameModule.gameHandler(event);
   if (info !== null) gameInfo.value = info;

@@ -87,6 +87,9 @@ const getShipsBySize = (size: number): Array<ShipData> => {
   return ships.filter(ship => ship.size === size);
 }
 
+/*
+  Добавление эвентов для перемещения к окну.
+ */
 const addEventsToWindow = (dragModuleInstance: DragModule) => {
   window.addEventListener('mousemove', (event) => dragModuleInstance.movingEvent(event));
   window.addEventListener('touchmove', (event) => dragModuleInstance.movingEvent(event));

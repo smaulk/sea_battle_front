@@ -26,7 +26,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('beforeunload', updateAlert);
 })
-
+/* Вывод предупреждения при выходе со страницы или ее обновлении */
 const updateAlert = (e: Event) => {
   (e || window.event).returnValue = true;
 }
@@ -37,6 +37,10 @@ const reloadGame = () => {
 
 
 const route = useRoute();
+/*
+  При установке легкого режима, бот будет играть в легком режиме,
+  в остальных случаях бот будет играть в нормальном режиме
+ */
 let difficultyLevel: DifficultyLevel = DifficultyLevel.Normal;
 onBeforeMount(() => {
   const level = route.query.difficulty;

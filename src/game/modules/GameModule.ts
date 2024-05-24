@@ -35,11 +35,11 @@ export default class GameModule {
     //Создание клеток (html)
     private selfCellCreator: CellCreator;
     private rivalCellCreator: CellCreator;
-
+    //Количество уничтоженных кораблей пользователя
     private _selfShipsDestroyed: number;
-
+    //Флаг, для проверки, может ли нажимать на клетку пользователь
     private isCanClick: boolean;
-
+    //Клетки, которые были последними нажаты на полях противника и пользователя
     private lastClickedCellsRival: ColRowData | null = null;
     private lastClickedCellsSelf: ColRowData | null = null;
 
