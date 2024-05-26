@@ -328,12 +328,11 @@ export default class GameModule {
                 this.isCanClick = false;
                 //Выполнение следующего кода с задержкой
                 setTimeout(async () => {
-                    const cellData: ColRowData | null = this.botModule.getCellToHit();
-                    if (!cellData) return;
+                    const cellData: ColRowData  = this.botModule.getCellToHit();
                     const RivalHitData: BotHitData | null = this.hitOnSelfCell(cellData);
                     if (!RivalHitData) return;
 
-                    this.botModule.setRivalHitData(cellData, RivalHitData);
+                    this.botModule.setBotHitData(cellData, RivalHitData);
                     if (RivalHitData.hit) {
                         const gameInfo = this.getGameStatus();
                         if (gameInfo) {

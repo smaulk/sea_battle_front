@@ -1,5 +1,5 @@
 import {ShipData} from "@/game/interfaces/ShipData";
-import {compareNum, equalColRowData, getEmptyCells, getRandomInt, getStartCellShip} from "game/utils";
+import {compareNum,  getEmptyCells, getRandomInt, getStartCellShip} from "game/utils";
 import {ColRowData} from "@/game/interfaces/ColRowData";
 import {BotHitData, HitData} from "game/interfaces/HitData.ts";
 import {HitStatus} from "@/game/enums/HitStatus";
@@ -19,7 +19,7 @@ export default class BotModule {
     //Количество выстрелов по кораблям бота [shipId]
     private readonly _hitsOnBotShips: Array<number>;
     //История попаданий (записывается при первом попадании, при уничтожении очищается)
-    private historyHitCells: Array<{ cell: ColRowData, hit: HitStatus }> = [];
+    private historyHitCells: Array<ColRowData> = [];
     //Уровень сложности бота
     private readonly difficultyLevel: DifficultyLevel = DifficultyLevel.Easy;
 
@@ -39,34 +39,25 @@ export default class BotModule {
     /*
         Возвращает клетку, в которую бот сделал выстрел.
      */
-    public getCellToHit(): ColRowData | null {
+    public getCellToHit(): ColRowData {
         const historyLength = this.historyHitCells.length;
-        //Если уровень сложности Легко
-        if (this.difficultyLevel === DifficultyLevel.Easy || historyLength === 0) {
-            return this.getRandomCell();
-        }
-        //Если уровень сложности нормально
-        const firstHitCell = this.historyHitCells[0];
-        //Если в истории только 1 запись
-        if (historyLength === 1) {
-            return this.getRandomCellForShipHit(firstHitCell.cell);
-        }
-        //Последняя и предпоследняя записи
-        const lastHitCell = this.historyHitCells[historyLength - 1];
-        const penultHitCell = this.historyHitCells[historyLength - 2];
-        let newCell: ColRowData | null = null;
-        //Если последняя запись была попаданием
-        if (lastHitCell.hit === HitStatus.Hit) {
-            newCell = this.checkNewCell(this.getNearbyCell(lastHitCell.cell, firstHitCell.cell));
-        }
-        //Последний выстрел был промахом
-        //Если предпоследняя запись была попаданием, и предпоследняя клетка не равна первой
-        else if (penultHitCell.hit === HitStatus.Hit && !equalColRowData(firstHitCell.cell, penultHitCell.cell)) {
-            newCell = this.checkNewCell(this.getNearbyCell(firstHitCell.cell, penultHitCell.cell));
-        }
+        //Если уровень сложности Нормально и история не пустая
+        if (this.difficultyLevel === DifficultyLevel.Normal && historyLength > 0) {
+            const firstHitCell: ColRowData = this.historyHitCells[0];
+            let newCell: ColRowData | null;
+            //Если в истории только 1 запись
+            if (historyLength === 1) newCell =  this.getRandomCellForShipHit(firstHitCell);
+            else{
+                const lastHitCell: ColRowData = this.historyHitCells[historyLength - 1];
+                //Получаем следующую по направлении клетку
+                newCell = this.checkNewCell(this.getNearbyCell(lastHitCell, firstHitCell)) ||
+                    this.checkNewCell(this.getNearbyCell(firstHitCell, lastHitCell));
+            }
 
-        if(newCell) return newCell;
-        return this.getRandomCellForShipHit(firstHitCell.cell);
+            if(newCell) return newCell;
+        }
+        //Возвращаем случайную клетку
+        return this.getRandomCell();
     }
 
     /*
@@ -167,22 +158,19 @@ export default class BotModule {
     }
 
     /*
-    Сообщить боту результат его попадания.
+        Сообщить боту результат его выстрела по клетке.
      */
-    public setRivalHitData(cellData: ColRowData, RivalHitData: BotHitData): void {
-        //Если попадание, или в истории уже есть записи
-        if (RivalHitData.hit === HitStatus.Hit ||
-            (RivalHitData.hit === HitStatus.Miss && this.historyHitCells.length !== 0)) {
-            this.historyHitCells.push({cell: cellData, hit: RivalHitData.hit});
+    public setBotHitData(cellData: ColRowData, RivalHitData: BotHitData): void {
+        //Если попадание
+        if (RivalHitData.hit === HitStatus.Hit ) {
+            this.historyHitCells.push(cellData);
         }
         //Если корабль уничтожен
         else if (RivalHitData.hit === HitStatus.Destroyed) {
+            //Обнуляем историю, и если есть пустые клетки вокруг корабля, записываем их в матрицу
             this.historyHitCells.length = 0;
-
             if (RivalHitData.emptyCells) {
-                for (const cell of RivalHitData.emptyCells) {
-                    this.setCellIsHit(cell);
-                }
+                RivalHitData.emptyCells.forEach(cell => this.setCellIsHit(cell));
             }
         }
     }
