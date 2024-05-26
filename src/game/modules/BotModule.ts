@@ -46,7 +46,6 @@ export default class BotModule {
             return this.getRandomCell();
         }
         //Если уровень сложности нормально
-
         const firstHitCell = this.historyHitCells[0];
         //Если в истории только 1 запись
         if (historyLength === 1) {
@@ -55,24 +54,31 @@ export default class BotModule {
         //Последняя и предпоследняя записи
         const lastHitCell = this.historyHitCells[historyLength - 1];
         const penultHitCell = this.historyHitCells[historyLength - 2];
+        let newCell: ColRowData | null = null;
         //Если последняя запись была попаданием
         if (lastHitCell.hit === HitStatus.Hit) {
-            const newHitCell: ColRowData = this.getNearbyCell(lastHitCell.cell, firstHitCell.cell);
-            if (!this.checkCellIsHit(newHitCell)) {
-                this.setCellIsHit(newHitCell);
-                return newHitCell;
-            }
+            newCell = this.checkNewCell(this.getNearbyCell(lastHitCell.cell, firstHitCell.cell));
         }
+        //Последний выстрел был промахом
         //Если предпоследняя запись была попаданием, и предпоследняя клетка не равна первой
-        if (penultHitCell.hit === HitStatus.Hit && !equalColRowData(firstHitCell.cell, penultHitCell.cell)) {
-            const newHitCell: ColRowData = this.getNearbyCell(firstHitCell.cell, penultHitCell.cell);
-            if (!this.checkCellIsHit(newHitCell)) {
-                this.setCellIsHit(newHitCell);
-                return newHitCell;
-            }
+        else if (penultHitCell.hit === HitStatus.Hit && !equalColRowData(firstHitCell.cell, penultHitCell.cell)) {
+            newCell = this.checkNewCell(this.getNearbyCell(firstHitCell.cell, penultHitCell.cell));
         }
 
+        if(newCell) return newCell;
         return this.getRandomCellForShipHit(firstHitCell.cell);
+    }
+
+    /*
+        Проверить новую клетку для хода, и если она подходит, то записать ее в матрицу клеток.
+     */
+    private checkNewCell (newHitCell: ColRowData): ColRowData | null {
+        //Если в клетку можно совершить выстрел
+        if (this.checkCellIsCanToHit(newHitCell)) {
+            this.setCellIsHit(newHitCell);
+            return newHitCell;
+        }
+        return null;
     }
 
     /*
@@ -102,12 +108,9 @@ export default class BotModule {
 
         // Проверяем каждую соседнюю клетку и возвращаем первую, которая еще не была атакована
         for (let i = 0; i < neighbors.length; i++) {
-            if (!this.checkCellIsHit(neighbors[i])) {
-                this.setCellIsHit(neighbors[i]);
-                return neighbors[i];
-            }
+            const newCell = this.checkNewCell(neighbors[i]);
+            if(newCell) return newCell;
         }
-
         // Если все соседние клетки были атакованы, возвращаем null
         return null;
     }
@@ -138,7 +141,7 @@ export default class BotModule {
         let cellData: ColRowData;
         do {
             cellData = randomCell();
-        } while (this.checkCellIsHit(cellData))
+        } while (!this.checkCellIsCanToHit(cellData))
 
         this.setCellIsHit(cellData);
 
@@ -147,12 +150,13 @@ export default class BotModule {
     }
 
     /*
-        Проверка, что в клетку игрока стреляли. Если стреляли - true, иначе - false. Если клетка не существует - true.
+        Проверка, что в клетку игрока можно выстрелить. Если нельзя выстрелить - false, иначе - true. 
+        Если клетка не существует - false.
      */
-    private checkCellIsHit(cellData: ColRowData): boolean {
+    private checkCellIsCanToHit(cellData: ColRowData): boolean {
         return (cellData.col < 0 || cellData.row < 0 || cellData.col >= this._userCells.length
-            || cellData.row >= this._userCells.length) ? true
-            : this._userCells[cellData.row][cellData.col] !== null;
+            || cellData.row >= this._userCells.length) ? false
+            : this._userCells[cellData.row][cellData.col] === null;
     }
 
     /*
