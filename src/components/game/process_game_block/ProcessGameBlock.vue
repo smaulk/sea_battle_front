@@ -82,7 +82,7 @@ const clickEnemyCell = async (event: Event) => {
   if (info !== null) gameInfo.value = info;
 }
 
-const getRivalShipsRemainingCount = (size: number) => {
+const getRivalShipsRemainingCount = (size: number): number => {
   return rivalShipsCounter.getRemainingCount(size);
 }
 
@@ -115,7 +115,7 @@ const getRivalShipsRemainingCount = (size: number) => {
           <p class="h1 text-center not-highlight">Поле противника</p>
           <BattlefieldBlock v-model:cells="rivalCellElements"/>
         </div>
-        <RivalDestroyedShips :get-remaining-count="getRivalShipsRemainingCount"/>
+          <RivalDestroyedShips class="col" :get-remaining-count="getRivalShipsRemainingCount"/>
       </div>
 
       <GameEndWindow v-if="gameInfo" :game-info="gameInfo" @reload-game="emits('reloadGame')"/>

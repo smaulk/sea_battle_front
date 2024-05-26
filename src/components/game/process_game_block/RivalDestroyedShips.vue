@@ -6,28 +6,36 @@ const {getRemainingCount} = defineProps({
   getRemainingCount: Function,
 })
 
+const remainingCount = (size: number): number | null => {
+  if(getRemainingCount){
+    return getRemainingCount(size);
+  }
+  return null;
+}
 
 </script>
 
 <template>
-  <div class="ship-container">
+  <div class="d-flex flex-column align-items-center">
     <p class="h5 text-center">Корабли противника</p>
-    <div class="ships"
-         v-for="size in [4, 3, 2, 1]"
-         :key="`ships-${size}`">
+    <div class="ship-container">
+      <div class="ships"
+           v-for="size in [4, 3, 2, 1]"
+           :key="`ships-${size}`">
 
-      <div
-          :class="['ship', getRemainingCount(size) === 0 ? 'ship-destroyed': null]"
-          :data-size="size"
-          :data-position="Position.Horizontal"
-      >
-        <span class="symbol"></span>
+        <div
+            :class="['ship', remainingCount(size) === 0 ? 'ship-destroyed': null]"
+            :data-size="size"
+            :data-position="Position.Horizontal"
+        >
+          <span class="symbol"></span>
+        </div>
+
+        <span class="ship-count not-highlight">{{ remainingCount(size) }}</span>
       </div>
-
-      <span class="ship-count not-highlight">{{ getRemainingCount(size) }}</span>
     </div>
-
   </div>
+
 </template>
 
 <style scoped lang="scss">
