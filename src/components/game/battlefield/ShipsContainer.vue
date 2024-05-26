@@ -78,9 +78,9 @@ const remainingCount = (size: number): number | null => {
 <style lang="scss">
 
 .btn-random {
-  height: var(--game-grid-cell-size);
-  font-size: calc(var(--game-grid-cell-size) / 2.5);
-  border-radius: 0.6vw;
+  padding: calc(var(--game-grid-cell-size) / 5);
+  font-size: calc(0.8rem +  0.4vw);
+  border-radius: 5px;
 }
 
 .preload-images-vertical {

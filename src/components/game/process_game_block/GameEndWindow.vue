@@ -16,7 +16,7 @@ const emits = defineEmits(['reloadGame']);
     >
       <div class="modal-content">
         <p v-if="gameInfo === GameStatus.UserWin">Вы победили!</p>
-        <p v-else>Вы проиграли :(</p>
+        <p v-else>Вы проиграли <span class="text-nowrap">:(</span></p>
       </div>
 
 
@@ -54,10 +54,10 @@ const emits = defineEmits(['reloadGame']);
 }
 
 .game-end-modal {
-  padding: 20px;
+  padding: 50px 20px;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  height: 60%;
+  min-height: 60%;
   text-align: center;
   background-color: $background-color;
   display: flex;
@@ -74,19 +74,19 @@ const emits = defineEmits(['reloadGame']);
   }
 
   .modal-content {
-    font-size: 50px;
+    font-size: calc(3rem + 1vw);
   }
 
   .modal-buttons {
     display: flex;
     justify-content: space-around;
     padding: 0 20px;
-    gap: 10px;
+    gap: 15px;
 
     button {
       width: 100%;
-      height: 50px;
-      font-size: 20px;
+      padding: 15px;
+      font-size: 1.4rem;
     }
   }
 

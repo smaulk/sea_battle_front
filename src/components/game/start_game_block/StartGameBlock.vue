@@ -48,7 +48,7 @@ onBeforeMount(() => {
     >
       <div class="d-flex flex-column  col-12 col-sm-10 col-lg-6 col-xl-12 gap-1 gap-xl-3 text-center ">
         <p class="h1 my-0">Разместите корабли</p>
-        <p class="h5">Уровень сложности: {{ DifficultyLevelRU[difficultyLevel as DifficultyLevel] }}</p>
+        <p class="h6">Уровень сложности: {{ DifficultyLevelRU[difficultyLevel as DifficultyLevel] }}</p>
       </div>
       <div class=
                "col-12 col-sm-10 col-lg-6 col-xl-12 d-flex flex-column
@@ -81,8 +81,8 @@ onBeforeMount(() => {
 
 <style scoped lang="scss">
 .start-game-btn {
-  height: calc(var(--game-grid-cell-size) * 1.3);
-  font-size: calc(var(--game-grid-cell-size) / 1.9);
+  padding: calc(var(--game-grid-cell-size) / 4);
+  font-size: calc(1.1rem +  0.5vw);
 }
 
 .start-block {

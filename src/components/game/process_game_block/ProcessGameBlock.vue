@@ -91,7 +91,7 @@ const getRivalShipsRemainingCount = (size: number): number => {
 <template>
   <div class="py-3 py-xxl-0">
     <div>
-      <p class="h5">Уровень сложности: {{ DifficultyLevelRU[difficultyLevel as DifficultyLevel] }}</p>
+      <p class="h6">Уровень сложности: {{ DifficultyLevelRU[difficultyLevel as DifficultyLevel] }}</p>
     </div>
 
 
@@ -99,7 +99,7 @@ const getRivalShipsRemainingCount = (size: number): number => {
 
       <div class="col-12 col-xl-6 col-xxl-5 battlefield__self "
            ref="battlefieldSelf">
-        <p class="h1 text-center not-highlight">Ваше поле</p>
+        <p class="h2 text-center not-highlight">Ваше поле</p>
         <BattlefieldBlock v-model:cells="selfCellElements"/>
         <Ship v-for="ship in shipsArray as Array<ShipData>"
               :ship-data="ship"
@@ -112,7 +112,7 @@ const getRivalShipsRemainingCount = (size: number): number => {
            mx-0 gap-3 row"
           ref="battlefieldRival">
         <div class="col-12 col-sm-8 col-lg-7 col-xl-12 col-xxl-8">
-          <p class="h1 text-center not-highlight">Поле противника</p>
+          <p class="h2 text-center not-highlight">Поле противника</p>
           <BattlefieldBlock v-model:cells="rivalCellElements"/>
         </div>
           <RivalDestroyedShips class="col" :get-remaining-count="getRivalShipsRemainingCount"/>
