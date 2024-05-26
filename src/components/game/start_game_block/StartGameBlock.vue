@@ -92,11 +92,7 @@ onBeforeMount(() => {
     margin: 0;
     padding: 0;
     color: $important-color;
-    font-size: 16px;
-
-    @media (min-width: 768px) {
-      font-size: 20px;
-    }
+    font-size: calc(0.9rem + 0.5vw);
   }
 
 }
