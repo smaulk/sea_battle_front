@@ -42,6 +42,9 @@ body {
     pointer-events: none;
 }
 
+.important {
+    color: $important-color;
+}
 
 .btn-u{
     @extend .btn;

@@ -44,7 +44,7 @@ import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
 <style scoped lang="scss">
 .difficulty-btns {
   button {
-    font-size: calc(1.6rem + 0.5vw);
+    font-size: calc(1.6rem + 0.4vw);
     padding: 10px;
   }
 }
