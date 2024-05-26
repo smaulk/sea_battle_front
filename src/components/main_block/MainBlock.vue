@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {DifficultyLevel} from "game/enums/DifficultyLevel";
+import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
 
 </script>
 
@@ -21,13 +21,13 @@ import {DifficultyLevel} from "game/enums/DifficultyLevel";
               class="btn-u"
               @click="$router.push({name: 'Game', query: {difficulty: DifficultyLevel.Easy}})"
           >
-            Легко
+            {{DifficultyLevelRU[DifficultyLevel.Easy]}}
           </button>
           <button
               class="btn-u"
               @click="$router.push({name: 'Game', query: {difficulty: DifficultyLevel.Normal}})"
           >
-            Нормально
+            {{DifficultyLevelRU[DifficultyLevel.Normal]}}
           </button>
         </div>
       </div>
