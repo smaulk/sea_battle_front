@@ -84,7 +84,10 @@ const remainingCount = (size: number): number | null => {
 }
 
 .preload-images-vertical {
-  display: none;
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  visibility: hidden;
 
   &:after {
     content: map-get($ships-v, 1) map-get($ships-v, 2) map-get($ships-v, 3) map-get($ships-v, 4);
