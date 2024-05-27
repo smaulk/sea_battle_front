@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import {ShipData} from "game/interfaces/ShipData";
+<script lang="ts" setup>
+import { ShipData } from "game/interfaces/ShipData";
 import Ship from "components/game/battlefield/Ship.vue";
-import {Position} from "game/enums/Position";
+import { Position } from "game/enums/Position";
 
 const {
   getShipStyle,
@@ -46,14 +46,14 @@ const remainingCount = (size: number): number | null => {
 
 <template>
   <div class="ship-container">
-    <div class="ships"
-         v-for="size in [4, 3, 2, 1]"
-         :key="`ships-${size}`">
+    <div v-for="size in [4, 3, 2, 1]"
+         :key="`ships-${size}`"
+         class="ships">
 
       <div
           :class="['ship', 'default']"
-          :data-size="size"
           :data-position="Position.Horizontal"
+          :data-size="size"
       ></div>
 
       <Ship
@@ -79,15 +79,12 @@ const remainingCount = (size: number): number | null => {
 
 .btn-random {
   padding: calc(var(--game-grid-cell-size) / 5);
-  font-size: calc(0.8rem +  0.4vw);
+  font-size: calc(0.8rem + 0.4vw);
   border-radius: 5px;
 }
 
 .preload-images-vertical {
-  position: absolute;
-  left: -9999px;
-  top: -9999px;
-  visibility: hidden;
+  display: none;
 
   &:after {
     content: map-get($ships-v, 1) map-get($ships-v, 2) map-get($ships-v, 3) map-get($ships-v, 4);

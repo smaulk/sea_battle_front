@@ -1,12 +1,12 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import {onBeforeMount, onMounted, onUnmounted, ref} from "vue";
+import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 import StartGameBlock from "components/game/start_game_block/StartGameBlock.vue";
 import ProcessGameBlock from "components/game/process_game_block/ProcessGameBlock.vue";
-import {ShipData} from "game/interfaces/ShipData";
-import {useRoute} from "vue-router";
-import {DifficultyLevel} from "game/enums/DifficultyLevel";
-import {CellsMatrix} from "game/interfaces/CellsMatrix";
+import { ShipData } from "game/interfaces/ShipData";
+import { useRoute } from "vue-router";
+import { DifficultyLevel } from "game/enums/DifficultyLevel";
+import { CellsMatrix } from "game/interfaces/CellsMatrix";
 
 let gameIsStarted = ref(false)
 let cellsArray: CellsMatrix = []
@@ -26,7 +26,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('beforeunload', updateAlert);
 })
-/* Вывод предупреждения при выходе со страницы или ее обновлении */
+/** Вывод предупреждения при выходе со страницы или ее обновлении */
 const updateAlert = (e: Event) => {
   (e || window.event).returnValue = true;
 }
@@ -37,9 +37,9 @@ const reloadGame = () => {
 
 
 const route = useRoute();
-/*
-  При установке легкого режима, бот будет играть в легком режиме,
-  в остальных случаях бот будет играть в нормальном режиме
+/**
+ * При установке легкого режима, бот будет играть в легком режиме,
+ * в остальных случаях бот будет играть в нормальном режиме
  */
 let difficultyLevel: DifficultyLevel = DifficultyLevel.Normal;
 onBeforeMount(() => {
@@ -54,12 +54,12 @@ onBeforeMount(() => {
 
 <template>
   <div :key="$route.fullPath">
-    <ProcessGameBlock :cells-array="cellsArray" :ships-array="shipsArray" :difficulty-level="difficultyLevel"
-                      v-if="gameIsStarted" @reload-game="reloadGame"/>
-    <StartGameBlock @start-game="startGame" :difficulty-level="difficultyLevel" v-else/>
+    <ProcessGameBlock v-if="gameIsStarted" :cells-array="cellsArray" :difficulty-level="difficultyLevel"
+                      :ships-array="shipsArray" @reload-game="reloadGame"/>
+    <StartGameBlock v-else :difficulty-level="difficultyLevel" @start-game="startGame"/>
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

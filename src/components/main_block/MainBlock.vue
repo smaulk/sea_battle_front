@@ -1,10 +1,8 @@
-<script setup lang="ts">
-import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
-
+<script lang="ts" setup>
+import { DifficultyLevel, DifficultyLevelRU } from "game/enums/DifficultyLevel";
 </script>
 
 <template>
-
   <div class="d-flex flex-column align-items-center py-3 gap-4">
     <div class="mb-5">
       <p class="h1 text-center">Играть в морской бой</p>
@@ -21,13 +19,13 @@ import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
               class="btn-u"
               @click="$router.push({name: 'Game', query: {difficulty: DifficultyLevel.Easy}})"
           >
-            {{DifficultyLevelRU[DifficultyLevel.Easy]}}
+            {{ DifficultyLevelRU[DifficultyLevel.Easy] }}
           </button>
           <button
               class="btn-u"
               @click="$router.push({name: 'Game', query: {difficulty: DifficultyLevel.Normal}})"
           >
-            {{DifficultyLevelRU[DifficultyLevel.Normal]}}
+            {{ DifficultyLevelRU[DifficultyLevel.Normal] }}
           </button>
         </div>
       </div>
@@ -38,10 +36,9 @@ import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
       Информация об игре
     </a>
   </div>
-
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .difficulty-btns {
   button {
     font-size: calc(1.6rem + 0.4vw);

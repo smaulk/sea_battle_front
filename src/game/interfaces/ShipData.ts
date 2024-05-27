@@ -1,11 +1,11 @@
-import {Position} from "../enums/Position";
+import { Position } from "../enums/Position";
 
-/*
-    Данные корабля
+/**
+ * Данные корабля
  */
 export interface ShipData {
-    id: number,
-    size: number,
-    position: Position,
+  id: number,
+  size: number,
+  position: Position,
 }
 

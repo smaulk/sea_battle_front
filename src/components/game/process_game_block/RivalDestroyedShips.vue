@@ -1,13 +1,13 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import {Position} from "game/enums/Position";
+import { Position } from "game/enums/Position";
 
-const {getRemainingCount} = defineProps({
+const { getRemainingCount } = defineProps({
   getRemainingCount: Function,
 })
 
 const remainingCount = (size: number): number | null => {
-  if(getRemainingCount){
+  if (getRemainingCount) {
     return getRemainingCount(size);
   }
   return null;
@@ -19,14 +19,14 @@ const remainingCount = (size: number): number | null => {
   <div class="d-flex flex-column align-items-center">
     <p class="h5 text-center">Корабли противника</p>
     <div class="ship-container">
-      <div class="ships"
-           v-for="size in [4, 3, 2, 1]"
-           :key="`ships-${size}`">
+      <div v-for="size in [4, 3, 2, 1]"
+           :key="`ships-${size}`"
+           class="ships">
 
         <div
             :class="['ship', remainingCount(size) === 0 ? 'ship-destroyed': null]"
-            :data-size="size"
             :data-position="Position.Horizontal"
+            :data-size="size"
         >
           <span class="symbol"></span>
         </div>
@@ -38,7 +38,7 @@ const remainingCount = (size: number): number | null => {
 
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .ship {
   cursor: default;
   top: 0;

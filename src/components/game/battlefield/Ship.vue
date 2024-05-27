@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import {ShipData} from "game/interfaces/ShipData.ts";
+import { ShipData } from "game/interfaces/ShipData.ts";
 
 const props = defineProps({
   shipData: Object,
@@ -11,11 +11,11 @@ const shipData: ShipData = props.shipData as ShipData;
 
 <template>
   <div
-      class="ship"
+      :key="shipData.id"
       :data-id="shipData.id"
-      :data-size="shipData.size"
       :data-position="shipData.position"
-      :key="shipData.id">
+      :data-size="shipData.size"
+      class="ship">
   </div>
 </template>
 

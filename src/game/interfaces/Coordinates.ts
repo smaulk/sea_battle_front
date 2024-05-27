@@ -1,7 +1,7 @@
-/*
-    Координаты
+/**
+ * Координаты
  */
 export interface Coordinates {
-    X: number,
-    Y: number,
+  X: number,
+  Y: number,
 }

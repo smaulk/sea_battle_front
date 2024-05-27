@@ -1,8 +1,8 @@
-/*
-    Статус выстрела
+/**
+ * Статус выстрела
  */
 export enum HitStatus {
-    Miss,
-    Hit,
-    Destroyed,
+  Miss,
+  Hit,
+  Destroyed,
 }

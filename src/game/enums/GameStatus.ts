@@ -1,8 +1,8 @@
-/*
-    Статус игры
+/**
+ * Статус игры
  */
 export enum GameStatus {
-    InProgress,
-    UserWin,
-    RivalWin,
+  InProgress,
+  UserWin,
+  RivalWin,
 }

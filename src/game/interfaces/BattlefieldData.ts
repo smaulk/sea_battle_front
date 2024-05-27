@@ -1,10 +1,10 @@
-import {ShipData} from "./ShipData";
-import {CellsMatrix} from "./CellsMatrix";
+import { ShipData } from "./ShipData";
+import { CellsMatrix } from "./CellsMatrix";
 
-/*
-    Данные об игровом поле
+/**
+ * Данные об игровом поле
  */
 export interface BattlefieldData {
-    cells: CellsMatrix,
-    ships: Array<ShipData>,
+  cells: CellsMatrix,
+  ships: Array<ShipData>,
 }

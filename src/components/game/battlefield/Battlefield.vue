@@ -1,6 +1,6 @@
-<script setup lang="ts">
-import {ref, onMounted} from "vue";
-import {config} from "@/config";
+<script lang="ts" setup>
+import { onMounted, ref } from "vue";
+import { config } from "@/config";
 
 const emits = defineEmits(['update:cells'])
 
@@ -24,11 +24,11 @@ const getLetter = (i: number): string => {
     <template v-for="row in config.countCells">
       <div class="header-cell">{{ row }}</div>
       <div
-          ref="cellElements"
           v-for="col in config.countCells"
-          class="battlefield-cell battlefield-cell__empty"
-          :data-row="row-1"
+          ref="cellElements"
           :data-col="col-1"
+          :data-row="row-1"
+          class="battlefield-cell battlefield-cell__empty"
       >
         <span class="symbol"></span>
       </div>

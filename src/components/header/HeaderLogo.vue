@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-const {img} = defineProps({
+const { img } = defineProps({
   img: String,
 });
 
@@ -10,15 +10,15 @@ const {img} = defineProps({
 <template>
   <div class="header-logo">
     <img
-        @click="$router.push({name: 'Main'})"
         :src="img"
         alt=""
         class="not-highlight"
+        @click="$router.push({name: 'Main'})"
     >
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .header-logo {
   cursor: pointer;
   height: 80px;

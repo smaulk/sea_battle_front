@@ -1,18 +1,18 @@
-<script setup lang="ts">
-import {onMounted, Ref, ref, watch} from "vue";
+<script lang="ts" setup>
+import { onMounted, Ref, ref, watch } from "vue";
 import FindCellModule from "game/modules/FindCellModule.ts";
-import {ShipData} from "game/interfaces/ShipData";
+import { ShipData } from "game/interfaces/ShipData";
 import DragModule from "game/modules/DragModule";
 import ShipPlacementModule from "game/modules/ShipPlacementModule";
 import ShipsCounter from "game/classes/ShipsCounter";
 import Battlefield from "components/game/battlefield/Battlefield.vue";
 import ShipContainer from "components/game/battlefield/ShipsContainer.vue";
 import CellCreator from "game/classes/CellCreator";
-import {CellsMatrix} from "game/interfaces/CellsMatrix";
+import { CellsMatrix } from "game/interfaces/CellsMatrix";
 
 
 const emits = defineEmits(['update:cellsArray', 'update:shipsArray', 'update:placedShipsCount']);
-const {cellsArray, shipsArray, shipCounter} = defineProps({
+const { cellsArray, shipsArray, shipCounter } = defineProps({
   cellsArray: Array,
   shipsArray: Array,
   shipCounter: ShipsCounter,
@@ -87,8 +87,8 @@ const getShipsBySize = (size: number): Array<ShipData> => {
   return ships.filter(ship => ship.size === size);
 }
 
-/*
-  Добавление эвентов для перемещения к окну.
+/**
+ * Добавление эвентов для перемещения к окну.
  */
 const addEventsToWindow = (dragModuleInstance: DragModule) => {
   window.addEventListener('mousemove', (event) => dragModuleInstance.movingEvent(event));
@@ -106,9 +106,9 @@ const addEventsToWindow = (dragModuleInstance: DragModule) => {
 
     <Battlefield v-model:cells="cellElements"/>
     <ShipContainer
+        :get-remaining-count="getRemainingCount"
         :get-ship-style="getShipStyle"
         :get-ships-by-size="getShipsBySize"
-        :get-remaining-count="getRemainingCount"
         @drag-start-event="dragStartEvent"
         @random-placement="randomPlacement"
     />
@@ -116,6 +116,6 @@ const addEventsToWindow = (dragModuleInstance: DragModule) => {
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 </style>

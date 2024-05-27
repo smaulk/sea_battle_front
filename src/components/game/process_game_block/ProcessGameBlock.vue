@@ -1,24 +1,24 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 import BattlefieldBlock from "components/game/battlefield/Battlefield.vue";
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from "vue";
 import ShipPlacementModule from "game/modules/ShipPlacementModule.ts";
-import {getEmptyCells} from "game/utils";
+import { getEmptyCells } from "game/utils";
 import Ship from "components/game/battlefield/Ship.vue";
 import BotModule from "game/modules/BotModule";
 import GameModule from "game/modules/GameModule";
 import CellCreator from "game/classes/CellCreator";
 import RandomCellsModule from "game/modules/RandomCellsModule";
 import ShipsCounter from "game/classes/ShipsCounter";
-import {GameStatus} from "game/enums/GameStatus";
+import { GameStatus } from "game/enums/GameStatus";
 import GameEndWindow from "components/game/process_game_block/GameEndWindow.vue";
-import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
+import { DifficultyLevel, DifficultyLevelRU } from "game/enums/DifficultyLevel";
 import RivalDestroyedShips from "components/game/process_game_block/RivalDestroyedShips.vue";
-import {BattlefieldData} from "game/interfaces/BattlefieldData";
-import {CellsMatrix} from "game/interfaces/CellsMatrix.ts";
-import {ShipData} from "game/interfaces/ShipData.ts";
+import { BattlefieldData } from "game/interfaces/BattlefieldData";
+import { CellsMatrix } from "game/interfaces/CellsMatrix.ts";
+import { ShipData } from "game/interfaces/ShipData.ts";
 
-const {cellsArray, shipsArray, difficultyLevel} = defineProps({
+const { cellsArray, shipsArray, difficultyLevel } = defineProps({
   cellsArray: Array,
   shipsArray: Array,
   difficultyLevel: String,
@@ -74,9 +74,9 @@ onMounted(() => {
 
 const gameInfo = ref(GameStatus.InProgress);
 
-/*
-  Обработка нажатия на клетку противника.
-*/
+/**
+ * Обработка нажатия на клетку противника.
+ */
 const clickEnemyCell = async (event: Event) => {
   const info: GameStatus | null = await gameModule.gameHandler(event);
   if (info !== null) gameInfo.value = info;
@@ -97,8 +97,8 @@ const getRivalShipsRemainingCount = (size: number): number => {
 
     <div class="d-flex justify-content-center row gap-4 gap-xl-0">
 
-      <div class="col-12 col-xl-6 col-xxl-5 battlefield__self "
-           ref="battlefieldSelf">
+      <div ref="battlefieldSelf"
+           class="col-12 col-xl-6 col-xxl-5 battlefield__self ">
         <p class="h2 text-center not-highlight">Ваше поле</p>
         <BattlefieldBlock v-model:cells="selfCellElements"/>
         <Ship v-for="ship in shipsArray as Array<ShipData>"
@@ -108,14 +108,14 @@ const getRivalShipsRemainingCount = (size: number): number => {
       </div>
 
       <div
+          ref="battlefieldRival"
           class="col-12 col-xl-6 col-xxl-7 battlefield__rival d-flex justify-content-center align-items-center
-           mx-0 gap-3 row"
-          ref="battlefieldRival">
+           mx-0 gap-3 row">
         <div class="col-12 col-sm-8 col-lg-7 col-xl-12 col-xxl-8">
           <p class="h2 text-center not-highlight">Поле противника</p>
           <BattlefieldBlock v-model:cells="rivalCellElements"/>
         </div>
-          <RivalDestroyedShips class="col" :get-remaining-count="getRivalShipsRemainingCount"/>
+        <RivalDestroyedShips :get-remaining-count="getRivalShipsRemainingCount" class="col"/>
       </div>
 
       <GameEndWindow v-if="gameInfo" :game-info="gameInfo" @reload-game="emits('reloadGame')"/>

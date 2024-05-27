@@ -24,22 +24,24 @@ $game-grid-cell-border: 1px solid #9393b8;
 
 
 //Картинки кораблей в горизонтальном виде
-$ships-h:(
-        4:url('assets/images/ships/four_h.svg'),
-        3:url('assets/images/ships/triple_h.svg'),
-        2: url('assets/images/ships/double_h.svg'),
-        1: url('assets/images/ships/single_h.svg'),
+//noinspection CssUnknownTarget
+$ships-h: (
+    4:url('assets/images/ships/four_h.svg'),
+    3:url('assets/images/ships/triple_h.svg'),
+    2: url('assets/images/ships/double_h.svg'),
+    1: url('assets/images/ships/single_h.svg'),
 );
 //Картинки кораблей в вертикальном виде
-$ships-v:(
-        4:url('assets/images/ships/four_v.svg'),
-        3:url('assets/images/ships/triple_v.svg'),
-        2: url('assets/images/ships/double_v.svg'),
-        1: url('assets/images/ships/single_v.svg'),
+//noinspection CssUnknownTarget
+$ships-v: (
+    4:url('assets/images/ships/four_v.svg'),
+    3:url('assets/images/ships/triple_v.svg'),
+    2: url('assets/images/ships/double_v.svg'),
+    1: url('assets/images/ships/single_v.svg'),
 );
 
 
-:root{
+:root {
   //Размер клетки
   --game-grid-cell-size: 30px;
 
@@ -51,7 +53,7 @@ $ships-v:(
   }
 }
 
-
+//noinspection CssUnknownTarget
 @font-face {
   font-family: 'Proxima Nova ExCn Rg';
   src: url('assets/fonts/ProximaNova/ProximaNovaExCn-Bold.eot');
@@ -63,6 +65,7 @@ $ships-v:(
   font-style: normal;
 }
 
+//noinspection CssUnknownTarget
 @font-face {
   font-family: 'Proxima Nova ExCn Rg';
   src: url('assets/fonts/ProximaNova/ProximaNovaExCn-BoldIt.eot');

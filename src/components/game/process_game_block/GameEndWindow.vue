@@ -1,7 +1,7 @@
-<script setup lang="ts">
-import {GameStatus} from "game/enums/GameStatus";
+<script lang="ts" setup>
+import { GameStatus } from "game/enums/GameStatus";
 
-const {gameInfo} = defineProps({
+const { gameInfo } = defineProps({
   gameInfo: Number,
 })
 const emits = defineEmits(['reloadGame']);
@@ -11,8 +11,8 @@ const emits = defineEmits(['reloadGame']);
 <template>
   <div class="overlay">
     <div
-        class="game-end-modal col-10 col-lg-6"
         :class="gameInfo === GameStatus.UserWin ? 'modal-win' : 'modal-lost'"
+        class="game-end-modal col-10 col-lg-6"
     >
       <div class="modal-content">
         <p v-if="gameInfo === GameStatus.UserWin">Вы победили!</p>
@@ -37,7 +37,7 @@ const emits = defineEmits(['reloadGame']);
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 
 
 .overlay {

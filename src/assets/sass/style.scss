@@ -1,84 +1,89 @@
 @import "bootstrap";
 
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 body {
-    background-color: $background-color;
-    color: $main-color;
+  background-color: $background-color;
+  color: $main-color;
+  font-family: $font-family;
+  overflow-x: hidden;
+
+  * {
     font-family: $font-family;
-    overflow-x: hidden;
+  }
 
-    * {
-        font-family: $font-family;
-    }
-
-    #app{
-        min-height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
+  #app {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-.link{
-    text-decoration: none;
-    cursor: pointer;
+.link {
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .button {
-    user-select: none;
-    cursor: pointer;
-    border: 0;
+  user-select: none;
+  cursor: pointer;
+  border: 0;
 }
 
-.not-highlight{
-    user-select: none;
+.not-highlight {
+  user-select: none;
 }
 
-.not-touchable{
-    pointer-events: none;
+.not-touchable {
+  pointer-events: none;
 }
 
 .important {
-    color: $important-color;
+  color: $important-color;
 }
 
-.btn-u{
-    @extend .btn;
+.btn-u {
+  @extend .btn;
+  color: $main-color;
+  background-color: $second-color;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 100%;
+
+  &:hover {
     color: $main-color;
-    background-color: $second-color;
-    border-radius: 10px;
-    font-weight: bold;
-    width: 100%;
+    background-color: lighten($second-color, 15%);
+  }
 
-    &:hover{
-        color: $main-color;
-        background-color: lighten($second-color, 15%);
-    }
-
-    @media (min-width: 1920px) {
-        border-radius: 0.6vw;
-    }
+  @media (min-width: 1920px) {
+    border-radius: 0.6vw;
+  }
 }
 
-.h1{
-    font-size: calc(2rem + 0.6vw);
+.h1 {
+  font-size: calc(2rem + 0.6vw);
 }
-.h2{
-    font-size: calc(1.7rem + 0.8vw);
+
+.h2 {
+  font-size: calc(1.7rem + 0.8vw);
 }
-.h3{
-    font-size: calc(1.5rem + 0.5vw);
+
+.h3 {
+  font-size: calc(1.5rem + 0.5vw);
 }
-.h4{
-    font-size: calc(1.3rem + 0.4vw);
+
+.h4 {
+  font-size: calc(1.3rem + 0.4vw);
 }
-.h5{
-    font-size: calc(1.1rem + 0.5vw);
+
+.h5 {
+  font-size: calc(1.1rem + 0.5vw);
 }
-.h6{
-    font-size: calc(1.1rem + 0.3vw);
+
+.h6 {
+  font-size: calc(1.1rem + 0.3vw);
 }

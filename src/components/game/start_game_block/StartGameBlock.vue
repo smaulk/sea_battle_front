@@ -1,14 +1,14 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
-import {onBeforeMount, ref} from "vue";
+import { onBeforeMount, ref } from "vue";
 import ShipPlacementBlock from "components/game/ship_placement/ShipPlacementBlock.vue";
-import {getEmptyCells} from "game/utils";
+import { getEmptyCells } from "game/utils";
 import ShipsCounter from "game/classes/ShipsCounter";
-import {ShipData} from "game/interfaces/ShipData";
-import {DifficultyLevel, DifficultyLevelRU} from "game/enums/DifficultyLevel";
-import {CellsMatrix} from "game/interfaces/CellsMatrix";
+import { ShipData } from "game/interfaces/ShipData";
+import { DifficultyLevel, DifficultyLevelRU } from "game/enums/DifficultyLevel";
+import { CellsMatrix } from "game/interfaces/CellsMatrix";
 
-const {difficultyLevel} = defineProps({
+const { difficultyLevel } = defineProps({
   difficultyLevel: String,
 })
 
@@ -69,20 +69,20 @@ onBeforeMount(() => {
       </div>
     </div>
     <ShipPlacementBlock
-        class="col-12 col-xl-8"
         v-model:cellsArray="cells"
         v-model:shipsArray="ships"
         :ship-counter="shipsCounter"
+        class="col-12 col-xl-8"
     />
 
   </div>
 
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .start-game-btn {
   padding: calc(var(--game-grid-cell-size) / 4);
-  font-size: calc(1.1rem +  0.5vw);
+  font-size: calc(1.1rem + 0.5vw);
 }
 
 .start-block {
