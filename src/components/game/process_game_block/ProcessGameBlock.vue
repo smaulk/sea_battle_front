@@ -96,7 +96,7 @@ const getRivalShipsRemainingCount = (size: number): number => {
     <div class="d-flex justify-content-center row gap-4 gap-xl-0">
 
       <div ref="battlefieldSelf"
-           class="battlefield__self col-12 col-xl-6 col-xxl-5">
+           class="battlefield__self battlefield__wait col-12 col-xl-6 col-xxl-5">
         <p class="h2 text-center not-highlight">Ваше поле</p>
         <BattlefieldBlock v-model:cells="selfCellElements"/>
         <Ship v-for="ship in shipsArray as Array<ShipData>"

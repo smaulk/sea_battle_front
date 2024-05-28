@@ -38,7 +38,6 @@ const getLetter = (i: number): string => {
 </template>
 
 <style lang="scss">
-
 .battlefield__wait {
   opacity: .6;
   pointer-events: none;
