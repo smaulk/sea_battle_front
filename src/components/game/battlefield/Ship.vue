@@ -25,13 +25,17 @@ const shipData: ShipData = props.shipData as ShipData;
   cursor: move;
   touch-action: none;
   position: absolute;
-  //background-color: blue;
   background-size: contain;
   background-repeat: no-repeat;
   background-origin: border-box;
 
-  &.default {
+  &.static {
+    touch-action: auto;
     cursor: default;
+  }
+
+  &.default {
+    @extend .static;
     top: 0;
     left: 0;
     background-color: lighten($background-color, 10%) !important;

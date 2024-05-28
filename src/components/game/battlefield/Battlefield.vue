@@ -114,7 +114,6 @@ $box-shadow-cell: 0 0 1px calc(var(--game-grid-cell-size) / 75) black;
   .battlefield-cell__destroyed {
     .ship {
       border: calc(var(--game-grid-cell-size) / 15) solid red;
-      cursor: default;
       animation: appear-ship 0.5s ease forwards; /* Применяем анимацию появления */
     }
   }

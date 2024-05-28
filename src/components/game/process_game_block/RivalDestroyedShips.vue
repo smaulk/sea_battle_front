@@ -24,7 +24,7 @@ const remainingCount = (size: number): number | null => {
            class="ships">
 
         <div
-            :class="['ship', remainingCount(size) === 0 ? 'ship-destroyed': null]"
+            :class="['ship', 'static', remainingCount(size) === 0 ? 'ship-destroyed': null]"
             :data-position="Position.Horizontal"
             :data-size="size"
         >
@@ -40,7 +40,6 @@ const remainingCount = (size: number): number | null => {
 
 <style lang="scss" scoped>
 .ship {
-  cursor: default;
   top: 0;
   left: 0;
 

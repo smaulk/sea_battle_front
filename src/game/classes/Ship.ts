@@ -49,7 +49,7 @@ export default class Ship {
   /** Создать новый пустой HTML элемент корабля на основе его данных */
   public static createEmptyShipElement(shipData: ShipData) {
     const shipElem = document.createElement('div');
-    shipElem.classList.add('ship');
+    shipElem.classList.add('ship', 'static');
     shipElem.dataset.size = shipData.size.toString();
     shipElem.dataset.position = shipData.position;
     return shipElem;

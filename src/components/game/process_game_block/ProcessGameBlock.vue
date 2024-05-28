@@ -96,18 +96,18 @@ const getRivalShipsRemainingCount = (size: number): number => {
     <div class="d-flex justify-content-center row gap-4 gap-xl-0">
 
       <div ref="battlefieldSelf"
-           class="col-12 col-xl-6 col-xxl-5 battlefield__self ">
+           class="battlefield__self col-12 col-xl-6 col-xxl-5">
         <p class="h2 text-center not-highlight">Ваше поле</p>
         <BattlefieldBlock v-model:cells="selfCellElements"/>
         <Ship v-for="ship in shipsArray as Array<ShipData>"
               :ship-data="ship"
-              style="cursor: default"
+              class="static"
         />
       </div>
 
       <div
           ref="battlefieldRival"
-          class="col-12 col-xl-6 col-xxl-7 battlefield__rival d-flex justify-content-center align-items-center
+          class="battlefield__rival col-12 col-xl-6 col-xxl-7 d-flex justify-content-center align-items-center
            mx-0 gap-3 row">
         <div class="col-12 col-sm-8 col-lg-7 col-xl-12 col-xxl-8">
           <p class="h2 text-center not-highlight">Поле противника</p>
@@ -123,11 +123,6 @@ const getRivalShipsRemainingCount = (size: number): number => {
 </template>
 
 <style lang="scss">
-
-.battlefield__self {
-
-}
-
 .battlefield__rival {
   .battlefield-cell__empty {
     cursor: pointer;
@@ -137,6 +132,5 @@ const getRivalShipsRemainingCount = (size: number): number => {
     }
   }
 }
-
 
 </style>
