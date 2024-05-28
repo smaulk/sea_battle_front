@@ -6,7 +6,7 @@ import DragModule from "game/modules/DragModule";
 import ShipPlacementModule from "game/modules/ShipPlacementModule";
 import ShipsCounter from "game/classes/ShipsCounter";
 import Battlefield from "components/game/battlefield/Battlefield.vue";
-import ShipContainer from "components/game/battlefield/ShipsContainer.vue";
+import ShipContainer from "components/game/ship_placement/ShipsContainer.vue";
 import CellCreator from "game/classes/CellCreator";
 import { CellsMatrix } from "game/interfaces/CellsMatrix";
 

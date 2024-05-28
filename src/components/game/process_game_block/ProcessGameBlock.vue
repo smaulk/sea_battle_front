@@ -71,7 +71,6 @@ onMounted(() => {
 
 })
 
-
 const gameInfo = ref(GameStatus.InProgress);
 
 /**
@@ -79,7 +78,7 @@ const gameInfo = ref(GameStatus.InProgress);
  */
 const clickEnemyCell = async (event: Event) => {
   const info: GameStatus | null = await gameModule.gameHandler(event);
-  if (info !== null) gameInfo.value = info;
+  if (info) gameInfo.value = info;
 }
 
 const getRivalShipsRemainingCount = (size: number): number => {
@@ -93,7 +92,6 @@ const getRivalShipsRemainingCount = (size: number): number => {
     <div>
       <p class="h6">Уровень сложности: {{ DifficultyLevelRU[difficultyLevel as DifficultyLevel] }}</p>
     </div>
-
 
     <div class="d-flex justify-content-center row gap-4 gap-xl-0">
 

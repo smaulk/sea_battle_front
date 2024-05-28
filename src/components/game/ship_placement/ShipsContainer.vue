@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { ShipData } from "game/interfaces/ShipData";
+import { ShipData } from "game/interfaces/ShipData.ts";
 import Ship from "components/game/battlefield/Ship.vue";
-import { Position } from "game/enums/Position";
+import { Position } from "game/enums/Position.ts";
 
 const {
   getShipStyle,
