@@ -5,7 +5,7 @@ import { onMounted, ref } from "vue";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";
 import { getEmptyCells } from "@/helpers";
 import Ship from "components/game/Ship.vue";
-import BotService from "@/services/BotService.ts";
+import BotController from "@/services/BotController.ts";
 import GameService from "@/services/GameService.ts";
 import CellCreator from "@/helpers/CellCreator.ts";
 import RandomCellsService from "@/services/RandomCellsService.ts";
@@ -17,6 +17,8 @@ import RivalDestroyedShips from "components/game/RivalShipsContainer.vue";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
+import ShotController from "@/services/ShotController.ts";
+import { GameHandlerService } from "@/services/GameHandlerService.ts";
 
 const { cellsArray, shipsArray, difficultyLevel } = defineProps({
   cellsArray: Array,
@@ -32,10 +34,16 @@ const rivalCellElements = ref();
 const battlefieldSelf = ref();
 const battlefieldRival = ref();
 
+const battlefieldData: BattlefieldData = {
+  cells: cellsArray as CellsMatrix,
+  ships: shipsArray as Array<ShipData>
+}
 
 let shipPlacementModule: ShipPlacementService;
-let gameModule: GameService;
-let botModule: BotService;
+let gameService: GameService;
+let userController: ShotController;
+let botController: BotController;
+let gameHandler: GameHandlerService;
 const rivalShipsCounter: ShipsCounter = new ShipsCounter();
 
 onMounted(() => {
@@ -43,27 +51,26 @@ onMounted(() => {
       getEmptyCells(),
       new CellCreator(selfCellElements.value)
   );
-  shipPlacementModule.placeShipsFromCells(cellsArray as CellsMatrix, shipsArray as Array<ShipData>);
+  shipPlacementModule.placeShipsFromCells(battlefieldData);
 
-  const battlefieldData: BattlefieldData = new RandomCellsService()
+  userController = new ShotController(battlefieldData);
+
+  const randomBattlefield: BattlefieldData = new RandomCellsService()
       .getRandomBattlefieldData(new ShipsCounter().getShipsArray()) as BattlefieldData;
-  botModule = new BotService(
-      battlefieldData.cells,
-      battlefieldData.ships,
+  botController = new BotController(
+      randomBattlefield,
       difficultyLevel as DifficultyLevel
   );
 
-  gameModule = new GameService(
-      botModule,
+  gameService = new GameService(
       rivalShipsCounter,
-      cellsArray as CellsMatrix,
-      shipsArray as Array<ShipData>,
       new CellCreator(rivalCellElements.value),
       new CellCreator(selfCellElements.value),
       battlefieldSelf.value,
       battlefieldRival.value
   );
 
+  gameHandler = new GameHandlerService(gameService, userController, botController);
 
   rivalCellElements.value.forEach((cell: HTMLDivElement) => {
     cell.addEventListener('click', clickEnemyCell)
@@ -77,7 +84,7 @@ const gameInfo = ref(GameStatus.InProgress);
  * Обработка нажатия на клетку противника.
  */
 const clickEnemyCell = async (event: Event) => {
-  const info: GameStatus | null = await gameModule.gameHandler(event);
+  const info: GameStatus | null = await gameHandler.gameHandler(event);
   if (info) gameInfo.value = info;
 }
 

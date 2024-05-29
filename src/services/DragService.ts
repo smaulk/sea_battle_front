@@ -172,7 +172,7 @@ export default class DragService {
     const battlefieldData: BattlefieldData | null = new RandomCellsService().getRandomBattlefieldData(this.ships);
     if (!battlefieldData) return;
     this.ships = battlefieldData.ships;
-    this.shipPlacementModule.placeShipsFromCells(battlefieldData.cells, this.ships);
+    this.shipPlacementModule.placeShipsFromCells(battlefieldData);
     this.fullPlacedShips();
     this.shipsCounter.setAllPlaced();
   }

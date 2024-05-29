@@ -2,10 +2,10 @@ import { ColRowData } from "../interfaces/ColRowData.ts";
 import Ship from "@/models/Ship.ts";
 import ShipPlaceValidationService from "./ShipPlaceValidationService.ts";
 import Cell from "@/models/Cell.ts";
-import { ShipData } from "../interfaces/ShipData.ts";
 import { getEmptyCells, getNewCellData, getStartCellShip } from "@/helpers";
 import CellCreator from "@/helpers/CellCreator.ts";
 import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
+import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 
 /**
  * Модуль, отвечающий за размещение кораблей на поле.
@@ -86,7 +86,8 @@ export default class ShipPlacementService {
   /*
    * Размещение кораблей на поле из матрицы клеток.
    */
-  public placeShipsFromCells(cells: CellsMatrix, ships: Array<ShipData>): void {
+  public placeShipsFromCells(battlefieldData: BattlefieldData): void {
+    const {cells, ships} = battlefieldData;
     if (!cells || !ships) return;
     this.clearCellsMatrix();
 

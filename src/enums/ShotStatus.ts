@@ -1,7 +1,7 @@
 /**
  * Статус выстрела
  */
-export enum HitStatus {
+export enum ShotStatus {
   Miss,
   Hit,
   Destroyed,

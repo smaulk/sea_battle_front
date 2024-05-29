@@ -109,6 +109,26 @@ function getShipCells(startCellData: ColRowData, shipData: ShipData): Array<ColR
   return shipCells;
 }
 
+
+/**
+ * Получить массив пустых клеток вокруг корабля, не включающий клетки самого корабля.
+ */
+function getShipEmptyCells(startCellData: ColRowData, shipData: ShipData): Array<ColRowData> {
+  const shipCells: Array<ColRowData> = getShipCells(startCellData, shipData);
+  const emptyCells: Set<ColRowData> = new Set<ColRowData>();
+
+  shipCells.forEach(shipCell => {
+    getAroundCells(shipCell).forEach(cell => {
+      if (!shipCells.some(shipCell => equalColRowData(cell, shipCell))) {
+        emptyCells.add(cell);
+      }
+    });
+  });
+
+  return Array.from(emptyCells);
+}
+
+
 /**
  * Получить следующую клетку, в зависимости от расположения корабля.
  * @param cellData Данные клетки
@@ -144,6 +164,7 @@ export {
   isValidIndex,
   getAroundCells,
   getShipCells,
+  getShipEmptyCells,
   getStartCellShip,
   getNewCellData,
 }
