@@ -122,7 +122,7 @@ export default class ShipPlacementService extends CellsMatrixService {
   private placeShip(cell: Cell | null, ship: Ship): void {
     if (!cell || !ship) return;
     cell.setCellClassShip();
-    this.setDataInCell(cell.cellData, ship.shipData.id)
+    this.setShipIdInCell(cell.cellData, ship.shipData.id)
   }
 
   /**
@@ -130,7 +130,7 @@ export default class ShipPlacementService extends CellsMatrixService {
    */
   private removeShip(cell: Cell | null): void {
     if (!cell) return;
-    this.setDataInCell(cell.cellData, null);
+    this.setShipIdInCell(cell.cellData, null);
     cell.setCellClassEmpty();
   }
 

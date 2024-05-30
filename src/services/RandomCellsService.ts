@@ -86,7 +86,7 @@ export default class RandomCellsService extends CellsMatrixService{
   private setShipToMatrix(ship: ShipData, startCellData: ColRowData): void {
     for (let i = 0; i < ship.size; i++) {
       const cellData = getNewCellData(startCellData, ship.position, i);
-      this.setDataInCell(cellData, ship.id);
+      this.setShipIdInCell(cellData, ship.id);
     }
   }
 }

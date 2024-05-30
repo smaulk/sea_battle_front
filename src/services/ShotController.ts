@@ -39,7 +39,7 @@ export default class ShotController extends CellsMatrixService {
    * @param cellData Данные клетки, в которую будет совершен выстрел
    */
   public shot(cellData: ColRowData): ShotData {
-    const shipId = this.getDataFromCell(cellData);
+    const shipId = this.getShipIdFromCell(cellData);
 
     if (shipId) {
       const shipData = this._ships.find(ship => ship.id === shipId);

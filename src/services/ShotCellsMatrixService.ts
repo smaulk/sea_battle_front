@@ -2,6 +2,9 @@ import { BoolCellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { getFilledCellsMatrix, isValidColRowData } from "@/helpers";
 
+/**
+ * Сервис, отвечающий за работу с матрицей клеток, показывающей наличие выстрела в клетку.
+ */
 export default class ShotCellsMatrixService {
   private readonly _shotCells: BoolCellsMatrix = [];
 

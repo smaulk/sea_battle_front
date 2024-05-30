@@ -33,10 +33,10 @@ export default class ShipPlaceValidationService extends CellsMatrixService{
    */
   private checkCells(cellData: ColRowData): boolean {
     //Проверка, что данная клетка валидна и не занята
-    if (this.getDataFromCell(cellData) !== null) return false;
+    if (this.getShipIdFromCell(cellData) !== null) return false;
     //Если окружающая клетка не пустая, возвращаем false
     for (const cell of getAroundCells(cellData)) {
-      if (this.getDataFromCell(cell) !== null) return false;
+      if (this.getShipIdFromCell(cell) !== null) return false;
     }
     return true;
   }

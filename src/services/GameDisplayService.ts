@@ -1,8 +1,5 @@
 import { ShipData } from "../interfaces/ShipData.ts";
-import {
-  getShipCells,
-  getShipEmptyCells,
-} from "@/helpers";
+import { getShipCells, getShipEmptyCells, } from "@/helpers";
 import { ColRowData } from "../interfaces/ColRowData.ts";
 import Cell from "@/models/Cell.ts";
 import Ship from "@/models/Ship.ts";
@@ -79,14 +76,12 @@ export default class GameDisplayService {
     if (!cell) return;
     this.setLastClickedCell(cell, false);
 
-    if(shotData.shot === ShotStatus.Miss){
+    if (shotData.shot === ShotStatus.Miss) {
       cell.setCellClassMiss();
       this.setBattlefieldWait(false);
-    }
-    else if(shotData.shot === ShotStatus.Hit){
+    } else if (shotData.shot === ShotStatus.Hit) {
       cell.setCellClassHit();
-    }
-    else if(shotData.startCell && shotData.ship){
+    } else if (shotData.startCell && shotData.ship) {
       this.setShipDestroyed(shotData.startCell, shotData.ship, false);
     }
   }
@@ -117,12 +112,11 @@ export default class GameDisplayService {
    * @private
    */
   private setBattlefieldWait(isRival: boolean): void {
-    (isRival ?  this.battlefieldUser : this.battlefieldRival)
+    (isRival ? this.battlefieldUser : this.battlefieldRival)
       .classList.remove('battlefield__wait');
-    (isRival ? this.battlefieldRival: this.battlefieldUser)
+    (isRival ? this.battlefieldRival : this.battlefieldUser)
       .classList.add('battlefield__wait');
   }
-
 
   /**
    * Отобразить уничтоженный корабль.
@@ -155,13 +149,13 @@ export default class GameDisplayService {
       const cell = cellCreator.create(cellData);
       if (cell) {
         cell.setCellClassMissAuto();
-        if(isRival) this._shotCellService.setCellIsShot(cellData);
+        if (isRival) this._shotCellService.setCellIsShot(cellData);
       }
     }
   }
 
   /** Проверка, что в клетку можно выстрелить. */
-  public checkCellIsCanShot(cellData: ColRowData): boolean{
-      return this._shotCellService.checkCellIsCanShot(cellData);
+  public checkCellIsCanShot(cellData: ColRowData): boolean {
+    return this._shotCellService.checkCellIsCanShot(cellData);
   }
 }

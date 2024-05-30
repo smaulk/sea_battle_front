@@ -2,6 +2,9 @@ import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { getFilledCellsMatrix, isValidColRowData } from "@/helpers";
 
+/**
+ * Сервис, отвечающий за работу с матрицей клеток, хранящих id корабля.
+ */
 export default class CellsMatrixService {
 
   private readonly _cells: CellsMatrix;
@@ -11,7 +14,7 @@ export default class CellsMatrixService {
 
   constructor(cells?: CellsMatrix) {
     this._cells = cells ?? [];
-    if(this._cells.length === 0){
+    if (this._cells.length === 0) {
       this._cells.push(...this.getEmptyCells());
     }
   }
@@ -21,7 +24,7 @@ export default class CellsMatrixService {
    * @param cellData - Координаты клетки.
    * @param data - Данные, которые будут записаны в клетку.
    */
-  protected setDataInCell(cellData: ColRowData, data: number | null): void {
+  protected setShipIdInCell(cellData: ColRowData, data: number | null): void {
     this._cells[cellData.row][cellData.col] = data;
   }
 
@@ -32,7 +35,7 @@ export default class CellsMatrixService {
    * @return null - Клетка пуста
    * @return undefined - Клетки не существует
    */
-  protected getDataFromCell(cellData: ColRowData): number | null | undefined {
+  protected getShipIdFromCell(cellData: ColRowData): number | null | undefined {
     return (isValidColRowData(cellData))
       ? this._cells[cellData.row][cellData.col]
       : undefined;
@@ -45,10 +48,10 @@ export default class CellsMatrixService {
     this._cells.splice(0, this._cells.length, ...this.getEmptyCells());
   }
 
-   /**
+  /**
    * Получить матрицу из клеток, заполненных null
    */
-   private getEmptyCells(): CellsMatrix {
+  private getEmptyCells(): CellsMatrix {
     return getFilledCellsMatrix<number | null>(null);
   }
 }
