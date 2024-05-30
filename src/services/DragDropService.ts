@@ -11,7 +11,7 @@ import { BattlefieldData } from "../interfaces/BattlefieldData.ts";
 /**
  * Модуль, отвечающий за размещение кораблей по полю.
  */
-export default class DragService {
+export default class DragDropService {
   //Флаг, для проверки, было нажатие или перетаскивание
   private clickFlag: boolean;
   //id корабля, который перемещается

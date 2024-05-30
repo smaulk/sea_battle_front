@@ -2,7 +2,7 @@
 import { onBeforeMount, onMounted, Ref, ref } from "vue";
 import FindCellService from "@/services/FindCellService.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
-import DragService from "@/services/DragService.ts";
+import DragDropService from "@/services/DragDropService.ts";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";
 import ShipsCounter from "@/helpers/ShipsCounter.ts";
 import Battlefield from "components/game/Battlefield.vue";
@@ -18,7 +18,7 @@ const { cellsArray, shipsArray, shipCounter } = defineProps({
 
 const cells: CellsMatrix = cellsArray as CellsMatrix;
 const ships: Array<ShipData> = shipsArray as Array<ShipData>;
-let dragModule: DragService;
+let dragModule: DragDropService;
 const shipsCounter: ShipsCounter = shipCounter as ShipsCounter;
 
 const draggableShipId: Ref<number> = ref(-1);
@@ -32,7 +32,7 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  dragModule = new DragService(
+  dragModule = new DragDropService(
       new ShipPlacementService(new CellCreator(cellElements.value), cells),
       new FindCellService(cellElements.value),
       shipsCounter,
@@ -83,7 +83,7 @@ const getShipsBySize = (size: number): Array<ShipData> => {
 /**
  * Добавление эвентов для перемещения к окну.
  */
-const addEventsToWindow = (dragModuleInstance: DragService) => {
+const addEventsToWindow = (dragModuleInstance: DragDropService) => {
   window.addEventListener('mousemove', (event) => dragModuleInstance.movingEvent(event));
   window.addEventListener('touchmove', (event) => dragModuleInstance.movingEvent(event));
   window.addEventListener('mouseup', (event) => dragModuleInstance.dragStopEvent(event));
