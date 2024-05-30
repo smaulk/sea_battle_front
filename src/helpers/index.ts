@@ -9,7 +9,8 @@ import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
  * @param elem HTML элемент клетки
  */
 function getColRowData(elem: HTMLDivElement): ColRowData | null {
-  return Object.keys(elem.dataset).length !== 0
+  const dataset = Object.keys(elem.dataset);
+  return dataset.includes('col') && dataset.includes('row')
     ? {
       col: parseInt(elem.dataset.col as string),
       row: parseInt(elem.dataset.row as string)
@@ -25,13 +26,13 @@ function equalColRowData(data1: ColRowData, data2: ColRowData): boolean {
 }
 
 /**
- * Получить матрицу из пустых клеток, заполненных null
+ * Получить матрицу, заполненную указанным значением
  */
-function getEmptyCells(): CellsMatrix {
+function getFilledCellsMatrix<T>(value: T): T[][] {
   const count = config.countCells;
-  const cells: CellsMatrix = [];
+  const cells: T[][] = [];
   for (let i = 0; i < count; i++) {
-    cells.push(Array(count).fill(null) as Array<number | null>);
+    cells.push(Array(count).fill(value));
   }
   return cells;
 }
@@ -41,6 +42,14 @@ function getEmptyCells(): CellsMatrix {
  */
 function getRandomInt(max: number): number {
   return Math.floor(Math.random() * max);
+}
+
+function getRandomColRowData(): ColRowData {
+  const max = config.countCells;
+  return {
+    col: getRandomInt(max),
+    row: getRandomInt(max)
+  }
 }
 
 /**
@@ -53,10 +62,17 @@ function compareNum(num1: number, num2: number): 0 | 1 | -1 {
 }
 
 /**
- * Проверка, что индекс клетки правильный, и она существует
+ * Проверка, что индекс клетки правильный.
  */
 function isValidIndex(index: number): boolean {
   return index >= 0 && index < config.countCells;
+}
+
+/**
+ * Проверка, что индекс клетки правильный.
+ */
+function isValidColRowData(cellData: ColRowData): boolean {
+  return isValidIndex(cellData.row) && isValidIndex(cellData.col);
 }
 
 /**
@@ -66,14 +82,12 @@ function getAroundCells(cellData: ColRowData): Array<ColRowData> {
   const cells: Array<ColRowData> = []
 
   const checkCellsAround = ([rowOffset, colOffset]: Array<number>): boolean => {
-    if (isValidIndex(cellData.col + colOffset) &&
-      isValidIndex(cellData.row + rowOffset)) {
-      const newCellData: ColRowData = {
-        col: cellData.col + colOffset,
-        row: cellData.row + rowOffset
-      }
-      cells.push(newCellData);
+    const newCellData: ColRowData = {
+      col: cellData.col + colOffset,
+      row: cellData.row + rowOffset
     }
+    if (isValidColRowData(newCellData)) cells.push(newCellData);
+
     return true;
   }
 
@@ -158,10 +172,12 @@ function getStartCellShip(cells: CellsMatrix, shipId: number): ColRowData | null
 export {
   getColRowData,
   equalColRowData,
-  getEmptyCells,
+  getFilledCellsMatrix,
   getRandomInt,
+  getRandomColRowData,
   compareNum,
   isValidIndex,
+  isValidColRowData,
   getAroundCells,
   getShipCells,
   getShipEmptyCells,

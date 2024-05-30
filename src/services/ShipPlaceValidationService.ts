@@ -1,17 +1,16 @@
 import type { ShipData } from "../interfaces/ShipData.ts";
 import { ColRowData } from "../interfaces/ColRowData.ts";
-import { getAroundCells, getShipCells, isValidIndex } from "@/helpers";
+import { getAroundCells, getShipCells } from "@/helpers";
 import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
+import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
  * Модуль, отвечающий за проверку возможности размещения кораблей в клетках.
  */
-export default class ShipPlaceValidationService {
-
-  private readonly _cells: CellsMatrix;
+export default class ShipPlaceValidationService extends CellsMatrixService{
 
   constructor(cells: CellsMatrix) {
-    this._cells = cells;
+    super(cells)
   }
 
   /**
@@ -33,20 +32,12 @@ export default class ShipPlaceValidationService {
    * @return false В данную клетку нельзя установить корабль
    */
   private checkCells(cellData: ColRowData): boolean {
-    const isEmptyCell = (cellData: ColRowData): boolean =>
-      this._cells[cellData.row][cellData.col] === null;
     //Проверка, что данная клетка валидна и не занята
-    if (!(isValidIndex(cellData.col) && isValidIndex(cellData.row)
-      && isEmptyCell(cellData))) {
-      return false;
-    }
-
-    const aroundCells = getAroundCells(cellData);
+    if (this.getDataFromCell(cellData) !== null) return false;
     //Если окружающая клетка не пустая, возвращаем false
-    for (let cell of aroundCells) {
-      if (!isEmptyCell(cell)) return false;
+    for (const cell of getAroundCells(cellData)) {
+      if (this.getDataFromCell(cell) !== null) return false;
     }
     return true;
   }
-
 }

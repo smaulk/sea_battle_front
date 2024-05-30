@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onMounted, Ref, ref, watch } from "vue";
+import { onBeforeMount, onMounted, Ref, ref } from "vue";
 import FindCellService from "@/services/FindCellService.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
 import DragService from "@/services/DragService.ts";
@@ -10,14 +10,13 @@ import ShipContainer from "components/game/PlacementShipsContainer.vue";
 import CellCreator from "@/helpers/CellCreator.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 
-const emits = defineEmits(['update:cellsArray', 'update:shipsArray', 'update:placedShipsCount']);
 const { cellsArray, shipsArray, shipCounter } = defineProps({
   cellsArray: Array,
   shipsArray: Array,
   shipCounter: ShipsCounter,
 })
 
-const cells: Ref<CellsMatrix> = ref(cellsArray as CellsMatrix);
+const cells: CellsMatrix = cellsArray as CellsMatrix;
 const ships: Array<ShipData> = shipsArray as Array<ShipData>;
 let dragModule: DragService;
 const shipsCounter: ShipsCounter = shipCounter as ShipsCounter;
@@ -28,13 +27,13 @@ const dragLeft: Ref<number> = ref(0);
 const dragTop: Ref<number> = ref(0);
 const cellElements = ref();
 
-watch(cells.value, () => {
-  emits('update:cellsArray', cells.value)
+onBeforeMount(() => {
+  ships.push(...shipsCounter.getShipsArray())
 })
 
 onMounted(() => {
   dragModule = new DragService(
-      new ShipPlacementService(cells.value, new CellCreator(cellElements.value)),
+      new ShipPlacementService(new CellCreator(cellElements.value), cells),
       new FindCellService(cellElements.value),
       shipsCounter,
       ships,
@@ -45,7 +44,6 @@ onMounted(() => {
   );
   addEventsToWindow(dragModule);
 })
-
 
 const randomPlacement = () => {
   dragModule.randomPlace();

@@ -1,43 +1,31 @@
 <script lang="ts" setup>
-
-import { onBeforeMount, ref } from "vue";
+import { ref } from "vue";
 import ShipPlacementBlock from "components/game/ShipPlacementBlock.vue";
-import { getEmptyCells } from "@/helpers";
-import ShipsCounter from "@/helpers/ShipsCounter.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
 import { DifficultyLevel, DifficultyLevelRU } from "@/enums/DifficultyLevel.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
+import ShipsCounter from "@/helpers/ShipsCounter.ts";
 
 const { difficultyLevel } = defineProps({
   difficultyLevel: String,
 })
-
 const emits = defineEmits(['startGame'])
 
 let cells: CellsMatrix = [];
 let ships: Array<ShipData> = [];
+const shipCounter: ShipsCounter = new ShipsCounter();
+const isAllPlaced = ref(true);
 
-const checkFilled = () => {
-  isFilled.value = shipsCounter.isAllPlaced();
+const checkIsAllPlaced = () => {
+  isAllPlaced.value = shipCounter.isAllPlaced();
 }
-const isFilled = ref(true);
 
 const startGameClick = () => {
-  checkFilled();
-  if (isFilled.value) {
+  checkIsAllPlaced();
+  if (isAllPlaced.value) {
     emits('startGame', cells, ships);
   }
 }
-
-let shipsCounter: ShipsCounter;
-
-onBeforeMount(() => {
-  cells.push(...getEmptyCells());
-  shipsCounter = new ShipsCounter();
-  ships.push(...shipsCounter.getShipsArray());
-})
-
-
 </script>
 
 <template>
@@ -63,15 +51,15 @@ onBeforeMount(() => {
           </button>
         </div>
 
-        <p v-if="isFilled === false" class="start-block-alert">
+        <p v-if="isAllPlaced === false" class="start-block-alert">
           Для начала игры разместите все корабли!
         </p>
       </div>
     </div>
     <ShipPlacementBlock
-        v-model:cellsArray="cells"
-        v-model:shipsArray="ships"
-        :ship-counter="shipsCounter"
+        :cellsArray="cells"
+        :shipsArray="ships"
+        :ship-counter="shipCounter"
         class="col-12 col-xl-8"
     />
 

@@ -1,24 +1,22 @@
 import { ShipData } from "../interfaces/ShipData.ts";
-import { getEmptyCells, getNewCellData, getRandomInt } from "@/helpers";
+import { getNewCellData, getRandomColRowData } from "@/helpers";
 import { Position } from "../enums/Position.ts";
 import { ColRowData } from "../interfaces/ColRowData.ts";
 import ShipPlaceValidationService from "./ShipPlaceValidationService.ts";
 import { BattlefieldData } from "../interfaces/BattlefieldData.ts";
-import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
+import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
  * Модуль, отвечающий за случайную расстановку кораблей на поле.
  */
-export default class RandomCellsService {
+export default class RandomCellsService extends CellsMatrixService{
 
-  private _cells: CellsMatrix;
-  private _ships: Array<ShipData>;
-  private validationModule: ShipPlaceValidationService;
+  private _ships: Array<ShipData> = [];
+  private validationService: ShipPlaceValidationService;
 
   constructor() {
-    this._cells = getEmptyCells();
-    this._ships = [];
-    this.validationModule = new ShipPlaceValidationService(this._cells);
+    super();
+    this.validationService = new ShipPlaceValidationService(this.cells);
   }
 
   /**
@@ -31,11 +29,11 @@ export default class RandomCellsService {
     for (let attempt = 0; attempt < 1000; attempt++) {
       if (this.placeAllShips()) {
         return {
-          cells: this._cells,
+          cells: this.cells,
           ships: this._ships
         };
       }
-      this.resetCells();
+      this.clearCells();
     }
     return null;
   }
@@ -64,7 +62,7 @@ export default class RandomCellsService {
     for (let attempt = 0; attempt < 50; attempt++) {
       const { cellData, position } = this.getRandomPosition();
       this._ships[i] = { ...this._ships[i], position };
-      if (this.validationModule.checkCellForPlacement(this._ships[i], cellData)) {
+      if (this.validationService.checkCellForPlacement(this._ships[i], cellData)) {
         this.setShipToMatrix(this._ships[i], cellData);
         return true;
       }
@@ -76,10 +74,7 @@ export default class RandomCellsService {
    * Получить случайную клетку и позицию корабля
    */
   private getRandomPosition(): { cellData: ColRowData, position: Position } {
-    const cellData: ColRowData = {
-      col: getRandomInt(this._cells.length),
-      row: getRandomInt(this._cells.length)
-    }
+    const cellData: ColRowData = getRandomColRowData();
     const position = Math.random() > 0.5 ? Position.Horizontal : Position.Vertical;
 
     return { cellData, position };
@@ -91,14 +86,7 @@ export default class RandomCellsService {
   private setShipToMatrix(ship: ShipData, startCellData: ColRowData): void {
     for (let i = 0; i < ship.size; i++) {
       const cellData = getNewCellData(startCellData, ship.position, i);
-      this._cells[cellData.row][cellData.col] = ship.id;
+      this.setDataInCell(cellData, ship.id);
     }
-  }
-
-  /**
-   * Очистить матрицу клеток.
-   */
-  private resetCells(): void {
-    this._cells = getEmptyCells();
   }
 }

@@ -218,7 +218,7 @@ export default class DragService {
    */
   private shipIsPlaced(): boolean {
     if (this.draggableShipId.value < 0) return false;
-    return this.placedShips.value.indexOf(this.draggableShipId.value) !== -1;
+    return this.placedShips.value.includes(this.draggableShipId.value);
   }
 
   /**

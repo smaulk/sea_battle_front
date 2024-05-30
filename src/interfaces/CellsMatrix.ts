@@ -4,3 +4,5 @@
  [row][col]
  */
 export type CellsMatrix = Array<Array<number | null>>;
+
+export type BoolCellsMatrix = Array<Array<boolean>>;

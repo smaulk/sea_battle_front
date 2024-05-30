@@ -3,10 +3,9 @@
 import BattlefieldBlock from "components/game/Battlefield.vue";
 import { onMounted, ref } from "vue";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";
-import { getEmptyCells } from "@/helpers";
 import Ship from "components/game/Ship.vue";
 import BotController from "@/services/BotController.ts";
-import GameService from "@/services/GameService.ts";
+import GameDisplayService from "@/services/GameDisplayService.ts";
 import CellCreator from "@/helpers/CellCreator.ts";
 import RandomCellsService from "@/services/RandomCellsService.ts";
 import ShipsCounter from "@/helpers/ShipsCounter.ts";
@@ -40,17 +39,14 @@ const battlefieldData: BattlefieldData = {
 }
 
 let shipPlacementModule: ShipPlacementService;
-let gameService: GameService;
+let gameService: GameDisplayService;
 let userController: ShotController;
 let botController: BotController;
 let gameHandler: GameHandlerService;
 const rivalShipsCounter: ShipsCounter = new ShipsCounter();
 
 onMounted(() => {
-  shipPlacementModule = new ShipPlacementService(
-      getEmptyCells(),
-      new CellCreator(selfCellElements.value)
-  );
+  shipPlacementModule = new ShipPlacementService(new CellCreator(selfCellElements.value));
   shipPlacementModule.placeShipsFromCells(battlefieldData);
 
   userController = new ShotController(battlefieldData);
@@ -62,7 +58,7 @@ onMounted(() => {
       difficultyLevel as DifficultyLevel
   );
 
-  gameService = new GameService(
+  gameService = new GameDisplayService(
       rivalShipsCounter,
       new CellCreator(rivalCellElements.value),
       new CellCreator(selfCellElements.value),
@@ -84,7 +80,7 @@ const gameInfo = ref(GameStatus.InProgress);
  * Обработка нажатия на клетку противника.
  */
 const clickEnemyCell = async (event: Event) => {
-  const info: GameStatus | null = await gameHandler.gameHandler(event);
+  const info: GameStatus | null = await gameHandler.shot(event.target as HTMLDivElement);
   if (info) gameInfo.value = info;
 }
 

@@ -1,17 +1,16 @@
 import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { ShotData } from "@/interfaces/ShotData.ts";
-import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
 import { ShotStatus } from "@/enums/ShotStatus.ts";
 import { getStartCellShip } from "@/helpers";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
+import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
  * Модуль, отвечающий за выстрел по полю.
  * Хранит данные поля и кораблей, и обрабатывает выстрел по полю.
  */
-export default class ShotController{
-  private readonly _cells: CellsMatrix;
+export default class ShotController extends CellsMatrixService {
   private _ships: Array<ShipData>;
   private readonly _hitsOnShips: Array<number> = [];
   private _destroyedShipsCount: number = 0;
@@ -21,19 +20,11 @@ export default class ShotController{
   }
 
   constructor(battlefieldData: BattlefieldData) {
-    this._cells = battlefieldData.cells;
+    super(battlefieldData.cells)
     this._ships = battlefieldData.ships;
-
     for (let ship of battlefieldData.ships) {
       this._hitsOnShips[ship.id] = 0;
     }
-  }
-
-  /**
-   * Получить id корабля в данной клетке или null.
-   */
-  private getShipInCells(cellData: ColRowData): number | null {
-    return this._cells[cellData.row][cellData.col];
   }
 
   /**
@@ -48,7 +39,7 @@ export default class ShotController{
    * @param cellData Данные клетки, в которую будет совершен выстрел
    */
   public shot(cellData: ColRowData): ShotData {
-    const shipId = this.getShipInCells(cellData);
+    const shipId = this.getDataFromCell(cellData);
 
     if (shipId) {
       const shipData = this._ships.find(ship => ship.id === shipId);
@@ -58,7 +49,7 @@ export default class ShotController{
         let shot = ShotStatus.Hit;
         //Если корабль уничтожен
         if (this._hitsOnShips[shipId] === shipData.size) {
-          startCellData = getStartCellShip(this._cells, shipId);
+          startCellData = getStartCellShip(this.cells, shipId);
           shot = ShotStatus.Destroyed;
           this.addDestroyedShip();
         }

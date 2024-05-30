@@ -1,26 +1,25 @@
-import { compareNum, getEmptyCells, getRandomInt, getShipEmptyCells } from "@/helpers";
+import { compareNum, getRandomColRowData, getShipEmptyCells } from "@/helpers";
 import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { ShotData } from "@/interfaces/ShotData.ts";
 import { ShotStatus } from "@/enums/ShotStatus.ts";
 import { DifficultyLevel } from "@/enums/DifficultyLevel.ts";
-import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import ShotController from "@/services/ShotController.ts";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
+import ShotCellsMatrixService from "@/services/ShotCellsMatrixService.ts";
 
 /**
  * Модуль, отвечающий за игру бота.
  */
 export default class BotController extends ShotController{
-  //Клетки игрока для заполнения в процессе (изначально пустые)
-  private readonly _userCells: CellsMatrix;
+  private readonly _shotCellService: ShotCellsMatrixService;
   //История попаданий (записывается при первом попадании, при уничтожении очищается)
   private historyHitCells: Array<ColRowData> = [];
   //Уровень сложности бота
-  private readonly difficultyLevel: DifficultyLevel = DifficultyLevel.Easy;
+  private readonly difficultyLevel: DifficultyLevel = DifficultyLevel.Normal;
 
   constructor(battlefieldData: BattlefieldData, difficultyLevel: DifficultyLevel) {
     super(battlefieldData);
-    this._userCells = getEmptyCells();
+    this._shotCellService = new ShotCellsMatrixService();
     this.difficultyLevel = difficultyLevel;
   }
 
@@ -62,7 +61,7 @@ export default class BotController extends ShotController{
       this.historyHitCells.length = 0;
       if(shotData.startCell && shotData.ship){
         const emptyCells = getShipEmptyCells(shotData.startCell, shotData.ship);
-        emptyCells.forEach(cell => this.setCellIsHit(cell));
+        emptyCells.forEach(cell => this._shotCellService.setCellIsShot(cell));
       }
     }
   }
@@ -72,8 +71,8 @@ export default class BotController extends ShotController{
    */
   private checkNewCell(newHitCell: ColRowData): ColRowData | null {
     //Если в клетку можно совершить выстрел
-    if (this.checkCellIsCanToHit(newHitCell)) {
-      this.setCellIsHit(newHitCell);
+    if (this._shotCellService.checkCellIsCanShot(newHitCell)) {
+      this._shotCellService.setCellIsShot(newHitCell);
       return newHitCell;
     }
     return null;
@@ -93,30 +92,23 @@ export default class BotController extends ShotController{
    * Получить случайную соседнюю клетку для выстрела.
    */
   private getRandomCellForShipHit(cellData: ColRowData): ColRowData | null {
-    // Создаем список соседних клеток
-    let neighbors: Array<ColRowData> = [
-      { col: cellData.col + 1, row: cellData.row },
-      { col: cellData.col - 1, row: cellData.row },
-      { col: cellData.col, row: cellData.row + 1 },
-      { col: cellData.col, row: cellData.row - 1 }
-    ];
-
-    // Перемешиваем список
-    neighbors = this.shuffle(neighbors);
-
+    // Создаем список соседних клеток и перемешиваем его
+    const neighbors: Array<ColRowData> = this.shuffle(
+      [
+        { col: cellData.col + 1, row: cellData.row },
+        { col: cellData.col - 1, row: cellData.row },
+        { col: cellData.col, row: cellData.row + 1 },
+        { col: cellData.col, row: cellData.row - 1 }
+      ]
+    );
     // Проверяем каждую соседнюю клетку и возвращаем первую, которая еще не была атакована
-    for (let i = 0; i < neighbors.length; i++) {
-      const newCell = this.checkNewCell(neighbors[i]);
-      if (newCell) return newCell;
-    }
-    // Если все соседние клетки были атакованы, возвращаем null
-    return null;
+    return neighbors.find(neighbor => this.checkNewCell(neighbor)) || null;
   }
 
   /**
    * Функция для перемешивания массива (алгоритм Fisher-Yates)
    */
-  private shuffle(array: any[]): any[] {
+  private shuffle<T>(array: T[]): T[] {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -128,40 +120,14 @@ export default class BotController extends ShotController{
    * Получить случайную не отстреленную клетку на поле.
    */
   private getRandomCell(): ColRowData {
-    const size = this._userCells.length;
-
-    const randomCell = (): ColRowData => {
-      const col = getRandomInt(size);
-      const row = getRandomInt(size);
-      return { col, row };
-    };
-
     let cellData: ColRowData;
+    // Получаем случайную клетку, пока не найдем ту, в которую можно стрелять
     do {
-      cellData = randomCell();
-    } while (!this.checkCellIsCanToHit(cellData))
-
-    this.setCellIsHit(cellData);
-
+      cellData = getRandomColRowData();
+    } while (!this._shotCellService.checkCellIsCanShot(cellData))
+    // Помечаем клетку как отстреленную
+    this._shotCellService.setCellIsShot(cellData);
 
     return cellData;
   }
-
-  /**
-   * Проверка, что в клетку игрока можно выстрелить. Если нельзя выстрелить - false, иначе - true.
-   *   Если клетка не существует - false.
-   */
-  private checkCellIsCanToHit(cellData: ColRowData): boolean {
-    return (cellData.col < 0 || cellData.row < 0 || cellData.col >= this._userCells.length
-      || cellData.row >= this._userCells.length) ? false
-      : this._userCells[cellData.row][cellData.col] === null;
-  }
-
-  /**
-   * Записать, что в клетку игрока был совершен выстрел.
-   */
-  private setCellIsHit(cellData: ColRowData): void {
-    this._userCells[cellData.row][cellData.col] = 1;
-  }
-
 }

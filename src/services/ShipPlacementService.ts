@@ -2,25 +2,25 @@ import { ColRowData } from "../interfaces/ColRowData.ts";
 import Ship from "@/models/Ship.ts";
 import ShipPlaceValidationService from "./ShipPlaceValidationService.ts";
 import Cell from "@/models/Cell.ts";
-import { getEmptyCells, getNewCellData, getStartCellShip } from "@/helpers";
+import { getNewCellData, getStartCellShip } from "@/helpers";
 import CellCreator from "@/helpers/CellCreator.ts";
 import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
+import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
  * Модуль, отвечающий за размещение кораблей на поле.
  */
-export default class ShipPlacementService {
+export default class ShipPlacementService extends CellsMatrixService {
 
   private readonly shipValidation: ShipPlaceValidationService;
-  private readonly _cells: CellsMatrix;
   //Клетка, которая была использована для проверки размещения корабля
   private _oldCell: Cell | null;
   private cellCreator: CellCreator;
 
-  constructor(cells: CellsMatrix, cellCreator: CellCreator) {
-    this.shipValidation = new ShipPlaceValidationService(cells);
-    this._cells = cells;
+  constructor(cellCreator: CellCreator, cells?: CellsMatrix) {
+    super(cells)
+    this.shipValidation = new ShipPlaceValidationService(this.cells);
     this._oldCell = null;
     this.cellCreator = cellCreator;
   }
@@ -78,8 +78,7 @@ export default class ShipPlacementService {
 
     for (let i = 0; i < ship.shipData.size; i++) {
       const newCellData: ColRowData = getNewCellData(this._oldCell.cellData, ship.shipData.position, i);
-      const newCell: Cell | null = this.cellCreator.create(newCellData);
-      if (newCell) newCell.removeShipAllowed();
+      this.cellCreator.create(newCellData)?.removeShipAllowed();
     }
   }
 
@@ -87,9 +86,9 @@ export default class ShipPlacementService {
    * Размещение кораблей на поле из матрицы клеток.
    */
   public placeShipsFromCells(battlefieldData: BattlefieldData): void {
-    const {cells, ships} = battlefieldData;
+    const { cells, ships } = battlefieldData;
     if (!cells || !ships) return;
-    this.clearCellsMatrix();
+    this.clearCells();
 
     const placedShips = new Set<number | null>();
 
@@ -123,7 +122,7 @@ export default class ShipPlacementService {
   private placeShip(cell: Cell | null, ship: Ship): void {
     if (!cell || !ship) return;
     cell.setCellClassShip();
-    this.setShipIdInCell(cell, ship.shipData.id)
+    this.setDataInCell(cell.cellData, ship.shipData.id)
   }
 
   /**
@@ -131,15 +130,8 @@ export default class ShipPlacementService {
    */
   private removeShip(cell: Cell | null): void {
     if (!cell) return;
-    this.setShipIdInCell(cell, null);
+    this.setDataInCell(cell.cellData, null);
     cell.setCellClassEmpty();
-  }
-
-  /**
-   * Запись id корабля в матрицу клеток.
-   */
-  private setShipIdInCell(cell: Cell, shipId: number | null): void {
-    this._cells[cell.cellData.row][cell.cellData.col] = shipId;
   }
 
   /**
@@ -150,16 +142,7 @@ export default class ShipPlacementService {
 
     for (let i = 0; i < ship.shipData.size; i++) {
       const newCellData: ColRowData = getNewCellData(cell.cellData, ship.shipData.position, i);
-      const newCell: Cell | null = this.cellCreator.create(newCellData);
-      if (newCell) newCell.setShipAllowed();
+      this.cellCreator.create(newCellData)?.setShipAllowed();
     }
   }
-
-  /**
-   * Очистка матрицы клеток.
-   */
-  private clearCellsMatrix(): void {
-    this._cells.splice(0, this._cells.length, ...getEmptyCells());
-  }
-
 }

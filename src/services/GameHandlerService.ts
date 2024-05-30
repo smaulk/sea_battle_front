@@ -1,36 +1,38 @@
 import { GameStatus } from "@/enums/GameStatus.ts";
-import GameService from "@/services/GameService.ts";
+import GameDisplayService from "@/services/GameDisplayService.ts";
 import BotController from "@/services/BotController.ts";
-import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { config } from "@/config.ts";
 import { getColRowData, getRandomInt } from "@/helpers";
 import ShotController from "@/services/ShotController.ts";
 import { ShotData } from "@/interfaces/ShotData.ts";
+import { ShotStatus } from "@/enums/ShotStatus.ts";
 
-
+/**
+ * Переключатель игры, отвечает за ходы.
+ */
 export class GameHandlerService {
 
-  private gameService: GameService;
+  private gameService: GameDisplayService;
   private userController: ShotController;
   private botController: BotController;
 
   //Флаг, для проверки, может ли нажимать на клетку пользователь
   private isCanClick: boolean = true;
 
-  constructor(gameService: GameService, userController: ShotController, botController: BotController) {
+  constructor(gameService: GameDisplayService, userController: ShotController, botController: BotController) {
     this.gameService = gameService;
     this.userController = userController;
     this.botController = botController;
   }
 
   /**
-   * Игровой переключатель.
-   * Ожидает ходы пользователя и запускает ходы бота.
+   * Ожидает ход пользователя и запускает ходы бота.
    */
-  public async gameHandler(event: Event): Promise<GameStatus | null> {
+  public async shot(cellElement: HTMLDivElement): Promise<GameStatus | null> {
     if (!this.isCanClick) return null;
 
-    const userShot: boolean = this.takeShotUser(event.target as HTMLDivElement);
+    const userShot: boolean | null = this.takeShotUser(cellElement);
+    if(userShot === null) return null;
     if (userShot) return this.getGameStatus();
 
     return await this.takeShotBot();
@@ -40,47 +42,49 @@ export class GameHandlerService {
    * Ход пользователя
    * @param cellElem HTML элемент клетки
    * @return boolean Говорит, попал ли пользователь, или нет
+   * @return null Говорит, что пользователь не может стрелять в данную клетку
    */
-  private takeShotUser(cellElem: HTMLDivElement): boolean{
-    //Проверка, что клетка существует
+  private takeShotUser(cellElem: HTMLDivElement): boolean | null{
     const cellData = getColRowData(cellElem);
-    if (!cellData) return false;
-    //Проверка, если пользователь кликал на клетку
-    const clickedCell = this.gameService.checkClickedCells(cellData);
-    if (clickedCell !== null) return false;
+    //Проверка, что клетка не существует или пользователь уже кликал на клетку
+    if (!cellData || !this.gameService.checkCellIsCanShot(cellData)) return null;
+
     const shotData: ShotData = this.botController.shot(cellData);
     this.gameService.hitOnRivalCell(cellData, shotData);
 
     return !!shotData.shot;
   }
 
-
+  /**
+   * Ход бота.
+   */
   private async takeShotBot(): Promise<GameStatus> {
-    return new Promise((resolve) => {
-      this.disableClicks();
-      setTimeout(async () => {
-        const cellData: ColRowData = this.botController.getCellToShot();
-        const shotData: ShotData = this.userController.shot(cellData);
-        this.botController.setBotShotData(cellData, shotData);
-        this.gameService.hitOnSelfCell(cellData, shotData);
+    this.disableClicks();
+    await this.delay(this.getBotWaitTime());
 
-        if (shotData.shot) {
-          const gameInfo = this.getGameStatus();
-          if (gameInfo) {
-            this.disableClicks();
-            resolve(gameInfo);
-          } else {
-            const result = await this.takeShotBot();
-            resolve(result);
-          }
-        } else {
-          this.enableClicks();
-          resolve(GameStatus.InProgress);
-        }
-      }, this.getBotWaitTime());
-    });
+    const cellData = this.botController.getCellToShot();
+    const shotData: ShotData = this.userController.shot(cellData);
+    this.botController.setBotShotData(cellData, shotData);
+    this.gameService.hitOnSelfCell(cellData, shotData);
+    //Если бот попал
+    if (shotData.shot !== ShotStatus.Miss) {
+      const gameStatus = this.getGameStatus();
+      if (gameStatus !== GameStatus.InProgress) return gameStatus;
+
+      return this.takeShotBot();
+    }
+    else {
+      this.enableClicks();
+      return GameStatus.InProgress;
+    }
   }
 
+  /**
+   * Задержка выполнения
+   */
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   private getBotWaitTime(): number {
     return config.minBotWaitTimeMS + getRandomInt(config.maxBotWaitTimeMS - config.minBotWaitTimeMS);
@@ -98,7 +102,7 @@ export class GameHandlerService {
   /**
    * Получение статуса игры.
    */
-  public getGameStatus(): GameStatus {
+  private getGameStatus(): GameStatus {
     //Если все корабли противника уничтожены
     if (this.botController.isAllDestroyed) {
       this.disableClicks()
@@ -111,5 +115,4 @@ export class GameHandlerService {
     }
     return GameStatus.InProgress;
   }
-
 }
