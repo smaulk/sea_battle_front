@@ -58,7 +58,6 @@ const remainingCount = (size: number): number | null => {
 }
 
 .ship-destroyed {
-
   .symbol {
     z-index: 1001;
     position: absolute; /* Абсолютное позиционирование внутри клетки */

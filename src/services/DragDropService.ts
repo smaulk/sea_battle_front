@@ -13,38 +13,25 @@ import { BattlefieldData } from "../interfaces/BattlefieldData.ts";
  */
 export default class DragDropService {
   //Флаг, для проверки, было нажатие или перетаскивание
-  private clickFlag: boolean;
-  //id корабля, который перемещается
-  private draggableShipId: Ref<number>;
-  //Массив хранящий id кораблей, размещенных на поле
-  private readonly placedShips: Ref<Array<number>>;
+  private clickFlag: boolean = false;
   //Координаты объекта корабля при клике на него
-  private shipInitialCoordinates: Coordinates;
-  //Отклонение объекта влево и вверх, для перемещения по странице
-  private dragLeft: Ref<number>;
-  private dragTop: Ref<number>
-  //Массив кораблей пользователя
-  private ships: Array<ShipData>;
-  //Сервисы
-  private readonly shipPlacementService: ShipPlacementService
-  private readonly findCellPlacementService: FindCellService;
-  private shipsCounter: ShipsCounterService;
+  private shipInitialCoordinates: Coordinates = { X: 0, Y: 0 };
 
-  constructor(shipPlacementService: ShipPlacementService,
-              findCellPlacementService: FindCellService,
-              shipsCounter: ShipsCounterService, ships: Array<ShipData>,
-              dragLeft: Ref<number>, dragTop: Ref<number>,
-              draggableShipId: Ref<number>, placedShips: Ref<Array<number>>) {
-    this.clickFlag = false;
-    this.draggableShipId = draggableShipId;
-    this.placedShips = placedShips;
-    this.shipInitialCoordinates = { X: 0, Y: 0, }
-    this.shipPlacementService = shipPlacementService;
-    this.findCellPlacementService = findCellPlacementService;
-    this.shipsCounter = shipsCounter;
-    this.ships = ships;
-    this.dragLeft = dragLeft;
-    this.dragTop = dragTop;
+  constructor(
+    //Сервисы
+    private readonly shipPlacementService: ShipPlacementService,
+    private readonly findCellPlacementService: FindCellService,
+    private shipsCounter: ShipsCounterService,
+    //Массив кораблей пользователя
+    private ships: Array<ShipData>,
+    //Отклонение объекта влево и вверх, для перемещения по странице
+    private dragLeft: Ref<number>,
+    private dragTop: Ref<number>,
+    //id корабля, который перемещается
+    private draggableShipId: Ref<number>,
+    //Массив хранящий id кораблей, размещенных на поле
+    private readonly placedShips: Ref<Array<number>>
+  ) {
   }
 
   /**

@@ -15,13 +15,12 @@ export default class ShipPlacementService extends CellsMatrixService {
 
   private readonly shipValidation: ShipPlaceValidationService;
   //Клетка, которая была использована для проверки размещения корабля
-  private _oldCell: Cell | null;
+  private _oldCell: Cell | null = null;
   private cellCreator: CellCreatorService;
 
   constructor(cellCreator: CellCreatorService, cells?: CellsMatrix) {
     super(cells)
     this.shipValidation = new ShipPlaceValidationService(this.cells);
-    this._oldCell = null;
     this.cellCreator = cellCreator;
   }
 

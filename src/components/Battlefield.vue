@@ -106,10 +106,6 @@ $box-shadow-cell: 0 0 1px calc(var(--game-grid-cell-size) / 75) black;
     }
   }
 
-  .battlefield-cell__hit {
-    //background-color: red;
-  }
-
   .battlefield-cell__destroyed {
     .ship {
       border: calc(var(--game-grid-cell-size) / 15) solid red;
@@ -163,15 +159,6 @@ $box-shadow-cell: 0 0 1px calc(var(--game-grid-cell-size) / 75) black;
 
       }
     }
-
-  }
-
-
-  .battlefield-cell__empty {
-
-  }
-
-  .battlefield-cell__ship {
 
   }
 

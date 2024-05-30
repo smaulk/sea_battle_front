@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import BattlefieldBlock from "components/Battlefield.vue";
 import { onMounted, ref } from "vue";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";

@@ -29,7 +29,7 @@ export default class Ship {
   /**
    * Создание экземпляра класса
    * @param shipData Данные корабля
-   * @param isEmptyElement Создать новый пустой  HTML элемент для корабля
+   * @param isEmptyElement Создать новый пустой HTML элемент для корабля
    */
   static create(shipData: ShipData, isEmptyElement?: boolean): Ship | null {
     if (shipData && shipData.id !== null && shipData.size !== null

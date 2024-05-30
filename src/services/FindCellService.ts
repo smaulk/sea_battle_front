@@ -12,8 +12,8 @@ export default class FindCellService {
   private readonly cellElements: Array<HTMLDivElement>;
 
   constructor(cellElements: Array<HTMLDivElement>) {
-    this.cellCount = config.countCells;
     this.cellElements = cellElements;
+    this.cellCount = config.countCells;
   }
 
   /**

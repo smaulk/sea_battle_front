@@ -28,6 +28,7 @@ body {
   cursor: pointer;
 }
 
+//noinspection CssUnusedSymbol
 .button {
   user-select: none;
   cursor: pointer;
@@ -38,6 +39,7 @@ body {
   user-select: none;
 }
 
+//noinspection CssUnusedSymbol
 .not-touchable {
   pointer-events: none;
 }
@@ -46,6 +48,7 @@ body {
   color: $important-color;
 }
 
+//noinspection CssUnusedSymbol
 .btn-u {
   @extend .btn;
   color: $main-color;

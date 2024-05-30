@@ -22,8 +22,7 @@ export default class ShipsCounterService {
     this.shipsOfSize2 = config.countShipsOfSize2;
     this.shipsOfSize3 = config.countShipsOfSize3;
     this.shipsOfSize4 = config.countShipsOfSize4;
-
-    this._countOfRemaining = this.getDefaultShipCount();
+    this._countOfRemaining = this.getDefaultShipsCount();
     this._countOfPlaced = 0;
 
   }
@@ -65,7 +64,7 @@ export default class ShipsCounterService {
 
   /** Установить все корабли в качестве оставшихся */
   public setAllRemaining() {
-    this._countOfRemaining = this.getDefaultShipCount();
+    this._countOfRemaining = this.getDefaultShipsCount();
     this._countOfPlaced = 0;
   }
 
@@ -94,7 +93,7 @@ export default class ShipsCounterService {
   }
 
   /** Получение объекта с дефолтным количеством кораблей. */
-  private getDefaultShipCount() {
+  private getDefaultShipsCount() {
     return reactive({
       4: this.shipsOfSize4,
       3: this.shipsOfSize3,

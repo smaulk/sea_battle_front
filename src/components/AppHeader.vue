@@ -12,9 +12,7 @@ import HeaderLogo from "./AppHeaderLogo.vue";
       />
     </div>
   </nav>
-
 </template>
 
 <style lang="scss" scoped>
-
 </style>

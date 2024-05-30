@@ -11,22 +11,20 @@ import { ShotStatus } from "@/enums/ShotStatus.ts";
  * Переключатель игры, отвечает за ходы.
  */
 export class GameHandlerService {
-
-  private gameDisplayService: GameDisplayService;
-  private userController: ShotService;
-  private botController: BotService;
-
   //Флаг, для проверки, может ли нажимать на клетку пользователь
   private isCanClick: boolean = true;
 
-  constructor(gameDisplayService: GameDisplayService, userController: ShotService, botController: BotService) {
-    this.gameDisplayService = gameDisplayService;
-    this.userController = userController;
-    this.botController = botController;
+  constructor(
+    private gameDisplayService: GameDisplayService,
+    private userController: ShotService,
+    private botController: BotService
+  ) {
   }
 
   /**
    * Ожидает ход пользователя и запускает ходы бота.
+   * @param cellElement HTML элемент клетки
+   * @return Promise GameStatus игры либо null
    */
   public async shot(cellElement: HTMLDivElement): Promise<GameStatus | null> {
     if (!this.isCanClick) return null;
@@ -59,7 +57,7 @@ export class GameHandlerService {
    * Ход бота.
    */
   private async takeShotBot(): Promise<GameStatus> {
-    this.disableClicks();
+    this.toggleClicks(false);
     await this.delay(this.getBotWaitTime());
 
     const cellData = this.botController.getCellToShot();
@@ -73,30 +71,33 @@ export class GameHandlerService {
 
       return this.takeShotBot();
     } else {
-      this.enableClicks();
+      this.toggleClicks(true);
       return GameStatus.InProgress;
     }
   }
 
   /**
    * Задержка выполнения
+   * @param ms number - время задержки в миллисекундах.
    */
   private delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  /**
+   * Случайное время ожидания бота.
+   */
   private getBotWaitTime(): number {
     return config.minBotWaitTimeMS + getRandomInt(config.maxBotWaitTimeMS - config.minBotWaitTimeMS);
   }
 
-  private enableClicks(): void {
-    this.isCanClick = true
+  /**
+   * Переключает возможность клика.
+   * @param isCanClick boolean - Флаг, указывающий возможность клика.
+   */
+  private toggleClicks(isCanClick: boolean): void {
+    this.isCanClick = isCanClick;
   }
-
-  private disableClicks(): void {
-    this.isCanClick = false
-  }
-
 
   /**
    * Получение статуса игры.
@@ -104,12 +105,12 @@ export class GameHandlerService {
   private getGameStatus(): GameStatus {
     //Если все корабли противника уничтожены
     if (this.botController.isAllDestroyed) {
-      this.disableClicks()
+      this.toggleClicks(false)
       return GameStatus.UserWin;
     }
     //Если все корабли пользователя уничтожены.
     else if (this.userController.isAllDestroyed) {
-      this.disableClicks()
+      this.toggleClicks(false)
       return GameStatus.RivalWin;
     }
     return GameStatus.InProgress;

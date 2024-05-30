@@ -14,26 +14,20 @@ import ShotCellsMatrixService from "@/services/ShotCellsMatrixService.ts";
  */
 export default class GameDisplayService {
   private readonly _shotCellService: ShotCellsMatrixService;
-  private rivalShipsCounter: ShipsCounterService;
-  //Поля для игры (html)
-  private battlefieldUser: HTMLDivElement;
-  private battlefieldRival: HTMLDivElement;
-  //Создание клеток (html)
-  private readonly userCellCreator: CellCreatorService;
-  private readonly rivalCellCreator: CellCreatorService;
   //Клетки, которые были последними нажаты на полях противника и пользователя
   private lastClickedCellsRival: ColRowData | null = null;
   private lastClickedCellsUser: ColRowData | null = null;
 
-  constructor(rivalShipsCounter: ShipsCounterService,
-              rivalCellCreator: CellCreatorService, selfCellCreator: CellCreatorService,
-              battlefieldSelf: HTMLDivElement, battlefieldRival: HTMLDivElement) {
+  constructor(
+    private rivalShipsCounter: ShipsCounterService,
+    //Создание клеток (html)
+    private readonly rivalCellCreator: CellCreatorService,
+    private readonly userCellCreator: CellCreatorService,
+    //Поля для игры (html)
+    private battlefieldUser: HTMLDivElement,
+    private battlefieldRival: HTMLDivElement
+  ) {
     this._shotCellService = new ShotCellsMatrixService();
-    this.rivalCellCreator = rivalCellCreator;
-    this.userCellCreator = selfCellCreator;
-    this.battlefieldUser = battlefieldSelf;
-    this.battlefieldRival = battlefieldRival;
-    this.rivalShipsCounter = rivalShipsCounter;
   }
 
   /**

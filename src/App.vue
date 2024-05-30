@@ -1,3 +1,4 @@
+<!--suppress CssUnusedSymbol -->
 <script lang="ts" setup>
 import Header from "components/AppHeader.vue";
 </script>
@@ -19,8 +20,6 @@ import Header from "components/AppHeader.vue";
 </template>
 
 <style lang="scss" scoped>
-
-
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition: opacity 0.5s, transform 0.5s;

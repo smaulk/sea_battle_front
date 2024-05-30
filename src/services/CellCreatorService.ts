@@ -2,7 +2,7 @@ import { ColRowData } from "@/interfaces/ColRowData.ts";
 import Cell from "@/models/Cell.ts";
 
 /**
- * Класс, отвечающий за создание экземпляров класса Cell,
+ * Сервис, отвечающий за создание экземпляров класса Cell,
  * на основе заданного массива HTML элементов клеток.
  */
 export default class CellCreatorService {
