@@ -10,7 +10,7 @@ import ShotCellsMatrixService from "@/services/ShotCellsMatrixService.ts";
 /**
  * Модуль, отвечающий за игру бота.
  */
-export default class BotController extends ShotController{
+export default class BotController extends ShotController {
   private readonly _shotCellService: ShotCellsMatrixService;
   //История попаданий (записывается при первом попадании, при уничтожении очищается)
   private historyHitCells: Array<ColRowData> = [];
@@ -59,7 +59,7 @@ export default class BotController extends ShotController{
     else if (shotData.shot === ShotStatus.Destroyed) {
       //Обнуляем историю, и если есть пустые клетки вокруг корабля, записываем их в матрицу
       this.historyHitCells.length = 0;
-      if(shotData.startCell && shotData.ship){
+      if (shotData.startCell && shotData.ship) {
         const emptyCells = getShipEmptyCells(shotData.startCell, shotData.ship);
         emptyCells.forEach(cell => this._shotCellService.setCellIsShot(cell));
       }

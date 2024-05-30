@@ -9,7 +9,7 @@ import CellsMatrixService from "@/services/CellsMatrixService.ts";
 /**
  * Модуль, отвечающий за случайную расстановку кораблей на поле.
  */
-export default class RandomCellsService extends CellsMatrixService{
+export default class RandomCellsService extends CellsMatrixService {
 
   private _ships: Array<ShipData> = [];
   private validationService: ShipPlaceValidationService;

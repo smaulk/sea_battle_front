@@ -8,15 +8,16 @@ import { getFilledCellsMatrix, isValidColRowData } from "@/helpers";
 export default class CellsMatrixService {
 
   private readonly _cells: CellsMatrix;
-  protected get cells(): CellsMatrix {
-    return this._cells;
-  }
 
   constructor(cells?: CellsMatrix) {
     this._cells = cells ?? [];
     if (this._cells.length === 0) {
       this._cells.push(...this.getEmptyCells());
     }
+  }
+
+  protected get cells(): CellsMatrix {
+    return this._cells;
   }
 
   /**

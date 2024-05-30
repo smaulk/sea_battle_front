@@ -15,10 +15,6 @@ export default class ShotController extends CellsMatrixService {
   private readonly _hitsOnShips: Array<number> = [];
   private _destroyedShipsCount: number = 0;
 
-  get isAllDestroyed(): boolean {
-    return this._destroyedShipsCount === this._ships.length;
-  }
-
   constructor(battlefieldData: BattlefieldData) {
     super(battlefieldData.cells)
     this._ships = battlefieldData.ships;
@@ -27,11 +23,8 @@ export default class ShotController extends CellsMatrixService {
     }
   }
 
-  /**
-   * Увеличить количество уничтоженных кораблей.
-   */
-  private addDestroyedShip(): void {
-    this._destroyedShipsCount++;
+  get isAllDestroyed(): boolean {
+    return this._destroyedShipsCount === this._ships.length;
   }
 
   /**
@@ -66,5 +59,12 @@ export default class ShotController extends CellsMatrixService {
       ship: null,
       startCell: null
     };
+  }
+
+  /**
+   * Увеличить количество уничтоженных кораблей.
+   */
+  private addDestroyedShip(): void {
+    this._destroyedShipsCount++;
   }
 }

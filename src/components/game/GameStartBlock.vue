@@ -58,8 +58,8 @@ const startGameClick = () => {
     </div>
     <ShipPlacementBlock
         :cellsArray="cells"
-        :shipsArray="ships"
         :ship-counter="shipCounter"
+        :shipsArray="ships"
         class="col-12 col-xl-8"
     />
 

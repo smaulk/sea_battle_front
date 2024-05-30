@@ -7,7 +7,7 @@ import CellsMatrixService from "@/services/CellsMatrixService.ts";
 /**
  * Модуль, отвечающий за проверку возможности размещения кораблей в клетках.
  */
-export default class ShipPlaceValidationService extends CellsMatrixService{
+export default class ShipPlaceValidationService extends CellsMatrixService {
 
   constructor(cells: CellsMatrix) {
     super(cells)

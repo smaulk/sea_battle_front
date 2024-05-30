@@ -37,9 +37,27 @@ export default class GameDisplayService {
   }
 
   /**
+   * Отобразить выстрел по клетке пользователя.
+   */
+  public shotOnUserCell(cellData: ColRowData, shotData: ShotData): void {
+    const cell = this.userCellCreator.create(cellData);
+    if (!cell) return;
+    this.setLastClickedCell(cell, false);
+
+    if (shotData.shot === ShotStatus.Miss) {
+      cell.setCellClassMiss();
+      this.setBattlefieldWait(false);
+    } else if (shotData.shot === ShotStatus.Hit) {
+      cell.setCellClassHit();
+    } else if (shotData.startCell && shotData.ship) {
+      this.setShipDestroyed(shotData.startCell, shotData.ship, false);
+    }
+  }
+
+  /**
    * Отобразить выстрел по полю противника.
    */
-  public hitOnRivalCell(cellData: ColRowData, shotData: ShotData): void {
+  public shotOnRivalCell(cellData: ColRowData, shotData: ShotData): void {
     const cell: Cell | null = this.rivalCellCreator.create(cellData);
     if (!cell) return;
     this._shotCellService.setCellIsShot(cellData);
@@ -68,22 +86,9 @@ export default class GameDisplayService {
     }
   }
 
-  /**
-   * Отобразить выстрел по клетке пользователя.
-   */
-  public hitOnSelfCell(cellData: ColRowData, shotData: ShotData): void {
-    const cell = this.userCellCreator.create(cellData);
-    if (!cell) return;
-    this.setLastClickedCell(cell, false);
-
-    if (shotData.shot === ShotStatus.Miss) {
-      cell.setCellClassMiss();
-      this.setBattlefieldWait(false);
-    } else if (shotData.shot === ShotStatus.Hit) {
-      cell.setCellClassHit();
-    } else if (shotData.startCell && shotData.ship) {
-      this.setShipDestroyed(shotData.startCell, shotData.ship, false);
-    }
+  /** Проверка, что в клетку можно выстрелить. */
+  public checkCellIsCanShot(cellData: ColRowData): boolean {
+    return this._shotCellService.checkCellIsCanShot(cellData);
   }
 
   /**
@@ -152,10 +157,5 @@ export default class GameDisplayService {
         if (isRival) this._shotCellService.setCellIsShot(cellData);
       }
     }
-  }
-
-  /** Проверка, что в клетку можно выстрелить. */
-  public checkCellIsCanShot(cellData: ColRowData): boolean {
-    return this._shotCellService.checkCellIsCanShot(cellData);
   }
 }
