@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref } from "vue";
-import ShipPlacementBlock from "components/game/ShipPlacementBlock.vue";
+import ShipPlacementBlock from "components/ShipPlacementBlock.vue";
 import { ShipData } from "@/interfaces/ShipData.ts";
 import { DifficultyLevel, DifficultyLevelRU } from "@/enums/DifficultyLevel.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
-import ShipsCounter from "@/helpers/ShipsCounter.ts";
+import ShipsCounterService from "@/services/ShipsCounterService.ts";
 
 const { difficultyLevel } = defineProps({
   difficultyLevel: String,
@@ -13,7 +13,7 @@ const emits = defineEmits(['startGame'])
 
 let cells: CellsMatrix = [];
 let ships: Array<ShipData> = [];
-const shipCounter: ShipsCounter = new ShipsCounter();
+const shipCounter: ShipsCounterService = new ShipsCounterService();
 const isAllPlaced = ref(true);
 
 const checkIsAllPlaced = () => {

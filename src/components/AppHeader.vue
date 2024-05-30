@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { header_logo } from '@/config.ts';
-import HeaderLogo from "./HeaderLogo.vue";
+import HeaderLogo from "./AppHeaderLogo.vue";
 </script>
 
 <template>

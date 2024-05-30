@@ -3,30 +3,30 @@ import { getShipCells, getShipEmptyCells, } from "@/helpers";
 import { ColRowData } from "../interfaces/ColRowData.ts";
 import Cell from "@/models/Cell.ts";
 import Ship from "@/models/Ship.ts";
-import CellCreator from "@/helpers/CellCreator.ts";
+import CellCreatorService from "@/services/CellCreatorService.ts";
 import { ShotData } from "@/interfaces/ShotData.ts";
 import { ShotStatus } from "../enums/ShotStatus.ts";
-import ShipsCounter from "@/helpers/ShipsCounter.ts";
+import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import ShotCellsMatrixService from "@/services/ShotCellsMatrixService.ts";
 
 /**
- * Модуль, отвечающий за отображение ходов пользователю на странице.
+ * Сервис, отвечающий за отображение ходов пользователю на странице.
  */
 export default class GameDisplayService {
   private readonly _shotCellService: ShotCellsMatrixService;
-  private rivalShipsCounter: ShipsCounter;
+  private rivalShipsCounter: ShipsCounterService;
   //Поля для игры (html)
   private battlefieldUser: HTMLDivElement;
   private battlefieldRival: HTMLDivElement;
   //Создание клеток (html)
-  private readonly userCellCreator: CellCreator;
-  private readonly rivalCellCreator: CellCreator;
+  private readonly userCellCreator: CellCreatorService;
+  private readonly rivalCellCreator: CellCreatorService;
   //Клетки, которые были последними нажаты на полях противника и пользователя
   private lastClickedCellsRival: ColRowData | null = null;
   private lastClickedCellsUser: ColRowData | null = null;
 
-  constructor(rivalShipsCounter: ShipsCounter,
-              rivalCellCreator: CellCreator, selfCellCreator: CellCreator,
+  constructor(rivalShipsCounter: ShipsCounterService,
+              rivalCellCreator: CellCreatorService, selfCellCreator: CellCreatorService,
               battlefieldSelf: HTMLDivElement, battlefieldRival: HTMLDivElement) {
     this._shotCellService = new ShotCellsMatrixService();
     this.rivalCellCreator = rivalCellCreator;
@@ -100,7 +100,7 @@ export default class GameDisplayService {
   private setLastClickedCell(cell: Cell, isRival: boolean): void {
     if (!cell) return;
     const lastClickedCell: ColRowData | null = isRival ? this.lastClickedCellsRival : this.lastClickedCellsUser;
-    const cellCreator: CellCreator = isRival ? this.rivalCellCreator : this.userCellCreator;
+    const cellCreator: CellCreatorService = isRival ? this.rivalCellCreator : this.userCellCreator;
     //Удаление прошлой последней клетки
     if (lastClickedCell) {
       cellCreator.create(lastClickedCell)?.removeCellClassLast();
@@ -138,7 +138,7 @@ export default class GameDisplayService {
   /**
    * Установить клетки корабля в качестве уничтоженных.
    */
-  private addClassDoneToCells(startCellData: ColRowData, shipData: ShipData, cellCreator: CellCreator): void {
+  private addClassDoneToCells(startCellData: ColRowData, shipData: ShipData, cellCreator: CellCreatorService): void {
     const shipCells = getShipCells(startCellData, shipData);
     for (const cellData of shipCells) {
       cellCreator.create(cellData)?.setCellClassDestroyed();
@@ -148,7 +148,7 @@ export default class GameDisplayService {
   /**
    * Установить клетки вокруг корабля в качестве промахов.
    */
-  private addClassMissToCells(startCellData: ColRowData, shipData: ShipData, cellCreator: CellCreator, isRival: boolean): void {
+  private addClassMissToCells(startCellData: ColRowData, shipData: ShipData, cellCreator: CellCreatorService, isRival: boolean): void {
     const emptyCells = getShipEmptyCells(startCellData, shipData);
     for (const cellData of emptyCells) {
       const cell = cellCreator.create(cellData);

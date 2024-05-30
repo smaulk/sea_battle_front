@@ -3,14 +3,14 @@ import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { ShotData } from "@/interfaces/ShotData.ts";
 import { ShotStatus } from "@/enums/ShotStatus.ts";
 import { DifficultyLevel } from "@/enums/DifficultyLevel.ts";
-import ShotController from "@/services/ShotController.ts";
+import ShotService from "@/services/ShotService.ts";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import ShotCellsMatrixService from "@/services/ShotCellsMatrixService.ts";
 
 /**
- * Модуль, отвечающий за игру бота.
+ * Сервис, отвечающий за игру бота.
  */
-export default class BotController extends ShotController {
+export default class BotService extends ShotService {
   private readonly _shotCellService: ShotCellsMatrixService;
   //История попаданий (записывается при первом попадании, при уничтожении очищается)
   private historyHitCells: Array<ColRowData> = [];

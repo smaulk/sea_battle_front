@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ShipData } from "@/interfaces/ShipData.ts";
-import Ship from "components/game/Ship.vue";
+import Ship from "components/Ship.vue";
 import { Position } from "@/enums/Position.ts";
 
 const {

@@ -4,22 +4,22 @@ import FindCellService from "@/services/FindCellService.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
 import DragDropService from "@/services/DragDropService.ts";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";
-import ShipsCounter from "@/helpers/ShipsCounter.ts";
-import Battlefield from "components/game/Battlefield.vue";
-import ShipContainer from "components/game/PlacementShipsContainer.vue";
-import CellCreator from "@/helpers/CellCreator.ts";
+import ShipsCounterService from "@/services/ShipsCounterService.ts";
+import Battlefield from "components/Battlefield.vue";
+import ShipContainer from "components/PlacementShipsContainer.vue";
+import CellCreatorService from "@/services/CellCreatorService.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 
 const { cellsArray, shipsArray, shipCounter } = defineProps({
   cellsArray: Array,
   shipsArray: Array,
-  shipCounter: ShipsCounter,
+  shipCounter: ShipsCounterService,
 })
 
 const cells: CellsMatrix = cellsArray as CellsMatrix;
 const ships: Array<ShipData> = shipsArray as Array<ShipData>;
-let dragModule: DragDropService;
-const shipsCounter: ShipsCounter = shipCounter as ShipsCounter;
+let dragDropService: DragDropService;
+const shipsCounter: ShipsCounterService = shipCounter as ShipsCounterService;
 
 const draggableShipId: Ref<number> = ref(-1);
 const placedShips: Ref<Array<number>> = ref([]);
@@ -32,8 +32,8 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  dragModule = new DragDropService(
-      new ShipPlacementService(new CellCreator(cellElements.value), cells),
+  dragDropService = new DragDropService(
+      new ShipPlacementService(new CellCreatorService(cellElements.value), cells),
       new FindCellService(cellElements.value),
       shipsCounter,
       ships,
@@ -42,15 +42,15 @@ onMounted(() => {
       draggableShipId,
       placedShips
   );
-  addEventsToWindow(dragModule);
+  addEventsToWindow(dragDropService);
 })
 
 const randomPlacement = () => {
-  dragModule.randomPlace();
+  dragDropService.randomPlace();
 }
 
 const dragStartEvent = (event: MouseEvent | TouchEvent, ship: ShipData) => {
-  dragModule.dragStartEvent(event, ship)
+  dragDropService.dragStartEvent(event, ship)
 }
 
 const getRemainingCount = (shipSize: number) => {
@@ -83,12 +83,12 @@ const getShipsBySize = (size: number): Array<ShipData> => {
 /**
  * Добавление эвентов для перемещения к окну.
  */
-const addEventsToWindow = (dragModuleInstance: DragDropService) => {
-  window.addEventListener('mousemove', (event) => dragModuleInstance.movingEvent(event));
-  window.addEventListener('touchmove', (event) => dragModuleInstance.movingEvent(event));
-  window.addEventListener('mouseup', (event) => dragModuleInstance.dragStopEvent(event));
-  window.addEventListener('touchend', (event) => dragModuleInstance.dragStopEvent(event));
-  window.addEventListener('resize', () => dragModuleInstance.resizeEvent());
+const addEventsToWindow = (dragDropService: DragDropService) => {
+  window.addEventListener('mousemove', (event) => dragDropService.movingEvent(event));
+  window.addEventListener('touchmove', (event) => dragDropService.movingEvent(event));
+  window.addEventListener('mouseup', (event) => dragDropService.dragStopEvent(event));
+  window.addEventListener('touchend', (event) => dragDropService.dragStopEvent(event));
+  window.addEventListener('resize', () => dragDropService.resizeEvent());
 }
 </script>
 

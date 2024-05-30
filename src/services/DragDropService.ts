@@ -2,14 +2,14 @@ import { Ref } from "vue";
 import { ShipData } from "../interfaces/ShipData.ts";
 import { Coordinates } from "../interfaces/Coordinates.ts";
 import FindCellService from "./FindCellService.ts";
-import ShipsCounter from "@/helpers/ShipsCounter.ts";
+import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import Ship from "@/models/Ship.ts";
 import ShipPlacementService from "./ShipPlacementService.ts";
 import RandomCellsService from "./RandomCellsService.ts";
 import { BattlefieldData } from "../interfaces/BattlefieldData.ts";
 
 /**
- * Модуль, отвечающий за размещение кораблей по полю.
+ * Сервис, отвечающий за размещение кораблей по полю.
  */
 export default class DragDropService {
   //Флаг, для проверки, было нажатие или перетаскивание
@@ -25,22 +25,22 @@ export default class DragDropService {
   private dragTop: Ref<number>
   //Массив кораблей пользователя
   private ships: Array<ShipData>;
-  //Модули
-  private readonly shipPlacementModule: ShipPlacementService
-  private readonly findCellPlacementModule: FindCellService;
-  private shipsCounter: ShipsCounter;
+  //Сервисы
+  private readonly shipPlacementService: ShipPlacementService
+  private readonly findCellPlacementService: FindCellService;
+  private shipsCounter: ShipsCounterService;
 
-  constructor(shipPlacementModule: ShipPlacementService,
-              findCellPlacementModule: FindCellService,
-              shipsCounter: ShipsCounter, ships: Array<ShipData>,
+  constructor(shipPlacementService: ShipPlacementService,
+              findCellPlacementService: FindCellService,
+              shipsCounter: ShipsCounterService, ships: Array<ShipData>,
               dragLeft: Ref<number>, dragTop: Ref<number>,
               draggableShipId: Ref<number>, placedShips: Ref<Array<number>>) {
     this.clickFlag = false;
     this.draggableShipId = draggableShipId;
     this.placedShips = placedShips;
     this.shipInitialCoordinates = { X: 0, Y: 0, }
-    this.shipPlacementModule = shipPlacementModule;
-    this.findCellPlacementModule = findCellPlacementModule;
+    this.shipPlacementService = shipPlacementService;
+    this.findCellPlacementService = findCellPlacementService;
     this.shipsCounter = shipsCounter;
     this.ships = ships;
     this.dragLeft = dragLeft;
@@ -85,16 +85,16 @@ export default class DragDropService {
     if (!ship || !ship.isDragging()) return;
 
     //Производим проверку возможности размещения корабля в текущих координатах и отображаем результат
-    this.shipPlacementModule.removeAllowedCells(ship);
-    const newCell = ship.getNewColRowData(this.findCellPlacementModule, event);
+    this.shipPlacementService.removeAllowedCells(ship);
+    const newCell = ship.getNewColRowData(this.findCellPlacementService, event);
     if (newCell) {
       const oldCell = ship.getCurrentColRowData();
       if (oldCell) {
-        this.shipPlacementModule.removeShipFromCell(oldCell, ship);
-        this.shipPlacementModule.checkShipPlacing(newCell, ship);
-        this.shipPlacementModule.placeShipToCell(oldCell, ship);
+        this.shipPlacementService.removeShipFromCell(oldCell, ship);
+        this.shipPlacementService.checkShipPlacing(newCell, ship);
+        this.shipPlacementService.placeShipToCell(oldCell, ship);
       } else {
-        this.shipPlacementModule.checkShipPlacing(newCell, ship);
+        this.shipPlacementService.checkShipPlacing(newCell, ship);
       }
 
     } else {
@@ -112,7 +112,7 @@ export default class DragDropService {
     const ship = this.getShipById(this.draggableShipId.value);
     if (!ship || !ship.isDragging()) return;
 
-    this.shipPlacementModule.removeAllowedCells(ship);
+    this.shipPlacementService.removeAllowedCells(ship);
     ship.removeDragging();
     //Если пользователь нажимал на корабль, а не перемещал его
     if (this.clickFlag) {
@@ -121,16 +121,16 @@ export default class DragDropService {
     }
     //Если пользователь перемещал корабль
     else {
-      const newCell = ship.getNewColRowData(this.findCellPlacementModule, event);
+      const newCell = ship.getNewColRowData(this.findCellPlacementService, event);
       //Если в координатах есть клетка
       if (newCell) {
         const oldCell = ship.getCurrentColRowData();
         //Если есть старая клетка, то удаляем корабль из нее
-        if (oldCell) this.shipPlacementModule.removeShipFromCell(oldCell, ship);
+        if (oldCell) this.shipPlacementService.removeShipFromCell(oldCell, ship);
         //Размещаем корабль в новой клетке
-        const isPlace = this.shipPlacementModule.placeShipToCell(newCell, ship);
+        const isPlace = this.shipPlacementService.placeShipToCell(newCell, ship);
         //Если разместить не удалось и у корабля есть старая клетка, размещаем его в старой клетке
-        if (!isPlace && oldCell) this.shipPlacementModule.placeShipToCell(oldCell, ship);
+        if (!isPlace && oldCell) this.shipPlacementService.placeShipToCell(oldCell, ship);
         //Если корабль не был ранее размещен на поле
         if (!this.shipIsPlaced()) {
           //Если корабль был размещен
@@ -158,7 +158,7 @@ export default class DragDropService {
     const ship = this.getShipById(this.draggableShipId.value)
     if (!ship || !ship.isDragging()) return;
 
-    this.shipPlacementModule.removeAllowedCells(ship);
+    this.shipPlacementService.removeAllowedCells(ship);
     ship.removeDragging()
     if (!this.shipIsPlaced()) this.shipsCounter.incrementRemaining(ship.shipData.size);
 
@@ -172,7 +172,7 @@ export default class DragDropService {
     const battlefieldData: BattlefieldData | null = new RandomCellsService().getRandomBattlefieldData(this.ships);
     if (!battlefieldData) return;
     this.ships = battlefieldData.ships;
-    this.shipPlacementModule.placeShipsFromCells(battlefieldData);
+    this.shipPlacementService.placeShipsFromCells(battlefieldData);
     this.fullPlacedShips();
     this.shipsCounter.setAllPlaced();
   }
@@ -186,18 +186,18 @@ export default class DragDropService {
       return;
     }
 
-    this.shipPlacementModule.removeAllowedCells(ship);
+    this.shipPlacementService.removeAllowedCells(ship);
     //Меняем позицию корабля
     const oldCell = ship.getCurrentColRowData();
     if (oldCell) {
-      this.shipPlacementModule.removeShipFromCell(oldCell, ship);
+      this.shipPlacementService.removeShipFromCell(oldCell, ship);
       ship.changePosition();
       //Размещаем корабль в той же клетке, но с измененной позицией
-      const isPlace = this.shipPlacementModule.placeShipToCell(oldCell, ship);
+      const isPlace = this.shipPlacementService.placeShipToCell(oldCell, ship);
       //Если разместить не удалось, возвращаем кораблю предыдущую позицию
       if (!isPlace) {
         ship.changePosition();
-        this.shipPlacementModule.placeShipToCell(oldCell, ship);
+        this.shipPlacementService.placeShipToCell(oldCell, ship);
         ship.setAnimateTurnForbidden();
       }
     }

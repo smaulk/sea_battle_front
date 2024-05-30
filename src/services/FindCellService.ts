@@ -3,7 +3,7 @@ import { ColRowData } from "../interfaces/ColRowData.ts";
 import { config } from "@/config.ts";
 
 /**
- * Модуль, отвечающий за поиск клетки в координатах курсора.
+ * Сервис, отвечающий за поиск клетки в координатах курсора.
  */
 export default class FindCellService {
   //Количество клеток в ряду

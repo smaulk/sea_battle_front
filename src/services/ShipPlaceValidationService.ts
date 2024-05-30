@@ -5,7 +5,7 @@ import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
 import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
- * Модуль, отвечающий за проверку возможности размещения кораблей в клетках.
+ * Сервис, отвечающий за проверку возможности размещения кораблей в клетках.
  */
 export default class ShipPlaceValidationService extends CellsMatrixService {
 

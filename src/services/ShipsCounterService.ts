@@ -7,7 +7,7 @@ import { reactive } from "vue";
  * Класс, отвечающий за подсчет количества кораблей (размещенных и оставшихся),
  * а также за создание дефолтного массива кораблей.
  */
-export default class ShipsCounter {
+export default class ShipsCounterService {
   private _countOfRemaining: Record<number, number>;
   private _countOfPlaced: number;
   private readonly countShips: number;

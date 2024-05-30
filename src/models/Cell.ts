@@ -54,8 +54,8 @@ export default class Cell {
   }
 
   /** Проверка, что в данную клетку можно установить корабль */
-  public isValidPlace(shipPlaceValidationModule: ShipPlaceValidationService, ship: Ship): boolean {
-    return shipPlaceValidationModule.checkCellForPlacement(ship.shipData, this._cellData);
+  public isValidPlace(shipPlaceValidationService: ShipPlaceValidationService, ship: Ship): boolean {
+    return shipPlaceValidationService.checkCellForPlacement(ship.shipData, this._cellData);
   }
 
   /** Установить клетку, в качестве "промаха" */

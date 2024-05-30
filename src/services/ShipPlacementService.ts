@@ -3,22 +3,22 @@ import Ship from "@/models/Ship.ts";
 import ShipPlaceValidationService from "./ShipPlaceValidationService.ts";
 import Cell from "@/models/Cell.ts";
 import { getNewCellData, getStartCellShip } from "@/helpers";
-import CellCreator from "@/helpers/CellCreator.ts";
+import CellCreatorService from "@/services/CellCreatorService.ts";
 import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
- * Модуль, отвечающий за размещение кораблей на поле.
+ * Сервис, отвечающий за размещение кораблей на поле.
  */
 export default class ShipPlacementService extends CellsMatrixService {
 
   private readonly shipValidation: ShipPlaceValidationService;
   //Клетка, которая была использована для проверки размещения корабля
   private _oldCell: Cell | null;
-  private cellCreator: CellCreator;
+  private cellCreator: CellCreatorService;
 
-  constructor(cellCreator: CellCreator, cells?: CellsMatrix) {
+  constructor(cellCreator: CellCreatorService, cells?: CellsMatrix) {
     super(cells)
     this.shipValidation = new ShipPlaceValidationService(this.cells);
     this._oldCell = null;

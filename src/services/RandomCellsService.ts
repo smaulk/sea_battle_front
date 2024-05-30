@@ -7,7 +7,7 @@ import { BattlefieldData } from "../interfaces/BattlefieldData.ts";
 import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
- * Модуль, отвечающий за случайную расстановку кораблей на поле.
+ * Сервис, отвечающий за случайную расстановку кораблей на поле.
  */
 export default class RandomCellsService extends CellsMatrixService {
 

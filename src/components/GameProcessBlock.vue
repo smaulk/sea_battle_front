@@ -1,22 +1,22 @@
 <script lang="ts" setup>
 
-import BattlefieldBlock from "components/game/Battlefield.vue";
+import BattlefieldBlock from "components/Battlefield.vue";
 import { onMounted, ref } from "vue";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";
-import Ship from "components/game/Ship.vue";
-import BotController from "@/services/BotController.ts";
+import Ship from "components/Ship.vue";
+import BotService from "@/services/BotService.ts";
 import GameDisplayService from "@/services/GameDisplayService.ts";
-import CellCreator from "@/helpers/CellCreator.ts";
+import CellCreatorService from "@/services/CellCreatorService.ts";
 import RandomCellsService from "@/services/RandomCellsService.ts";
-import ShipsCounter from "@/helpers/ShipsCounter.ts";
+import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import { GameStatus } from "@/enums/GameStatus.ts";
-import GameEndWindow from "components/game/GameEndModal.vue";
+import GameEndWindow from "components/GameEndModal.vue";
 import { DifficultyLevel, DifficultyLevelRU } from "@/enums/DifficultyLevel.ts";
-import RivalDestroyedShips from "components/game/RivalShipsContainer.vue";
+import RivalDestroyedShips from "components/RivalShipsContainer.vue";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
-import ShotController from "@/services/ShotController.ts";
+import ShotService from "@/services/ShotService.ts";
 import { GameHandlerService } from "@/services/GameHandlerService.ts";
 
 const { cellsArray, shipsArray, difficultyLevel } = defineProps({
@@ -38,30 +38,30 @@ const battlefieldData: BattlefieldData = {
   ships: shipsArray as Array<ShipData>
 }
 
-let shipPlacementModule: ShipPlacementService;
+let shipPlacementService: ShipPlacementService;
 let gameService: GameDisplayService;
-let userController: ShotController;
-let botController: BotController;
+let userController: ShotService;
+let botController: BotService;
 let gameHandler: GameHandlerService;
-const rivalShipsCounter: ShipsCounter = new ShipsCounter();
+const rivalShipsCounter: ShipsCounterService = new ShipsCounterService();
 
 onMounted(() => {
-  shipPlacementModule = new ShipPlacementService(new CellCreator(selfCellElements.value));
-  shipPlacementModule.placeShipsFromCells(battlefieldData);
+  shipPlacementService = new ShipPlacementService(new CellCreatorService(selfCellElements.value));
+  shipPlacementService.placeShipsFromCells(battlefieldData);
 
-  userController = new ShotController(battlefieldData);
+  userController = new ShotService(battlefieldData);
 
   const randomBattlefield: BattlefieldData = new RandomCellsService()
-      .getRandomBattlefieldData(new ShipsCounter().getShipsArray()) as BattlefieldData;
-  botController = new BotController(
+      .getRandomBattlefieldData(new ShipsCounterService().getShipsArray()) as BattlefieldData;
+  botController = new BotService(
       randomBattlefield,
       difficultyLevel as DifficultyLevel
   );
 
   gameService = new GameDisplayService(
       rivalShipsCounter,
-      new CellCreator(rivalCellElements.value),
-      new CellCreator(selfCellElements.value),
+      new CellCreatorService(rivalCellElements.value),
+      new CellCreatorService(selfCellElements.value),
       battlefieldSelf.value,
       battlefieldRival.value
   );

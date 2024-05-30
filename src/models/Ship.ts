@@ -72,8 +72,8 @@ export default class Ship {
   }
 
   /** Получить данные клетки в текущих координатах */
-  public getNewColRowData(findCellPlacementModule: FindCellService, event: MouseEvent | TouchEvent): ColRowData | null {
-    return findCellPlacementModule.findCellToPlace(event, this._shipHtmlElem);
+  public getNewColRowData(findCellPlacementService: FindCellService, event: MouseEvent | TouchEvent): ColRowData | null {
+    return findCellPlacementService.findCellToPlace(event, this._shipHtmlElem);
   }
 
   /** Поменять позицию корабля */

@@ -7,10 +7,10 @@ import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**
- * Модуль, отвечающий за выстрел по полю.
+ * Сервис, отвечающий за выстрел по полю.
  * Хранит данные поля и кораблей, и обрабатывает выстрел по полю.
  */
-export default class ShotController extends CellsMatrixService {
+export default class ShotService extends CellsMatrixService {
   private _ships: Array<ShipData>;
   private readonly _hitsOnShips: Array<number> = [];
   private _destroyedShipsCount: number = 0;

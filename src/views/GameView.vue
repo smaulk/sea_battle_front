@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 
 import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
-import StartGameBlock from "components/game/GameStartBlock.vue";
-import ProcessGameBlock from "components/game/GameProcessBlock.vue";
+import StartGameBlock from "components/GameStartBlock.vue";
+import ProcessGameBlock from "components/GameProcessBlock.vue";
 import { ShipData } from "@/interfaces/ShipData.ts";
 import { useRoute } from "vue-router";
 import { DifficultyLevel } from "@/enums/DifficultyLevel.ts";
