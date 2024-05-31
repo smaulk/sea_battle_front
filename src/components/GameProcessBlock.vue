@@ -6,7 +6,6 @@ import Ship from "components/Ship.vue";
 import BotService from "@/services/BotService.ts";
 import GameDisplayService from "@/services/GameDisplayService.ts";
 import CellCreatorService from "@/services/CellCreatorService.ts";
-import RandomCellsService from "@/services/RandomCellsService.ts";
 import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import { GameStatus } from "@/enums/GameStatus.ts";
 import GameEndWindow from "components/GameEndModal.vue";
@@ -38,7 +37,7 @@ const battlefieldData: BattlefieldData = {
 }
 
 let shipPlacementService: ShipPlacementService;
-let gameService: GameDisplayService;
+let gameDisplay: GameDisplayService;
 let userController: ShotService;
 let botController: BotService;
 let gameHandler: GameHandlerService;
@@ -47,25 +46,16 @@ const rivalShipsCounter: ShipsCounterService = new ShipsCounterService();
 onMounted(() => {
   shipPlacementService = new ShipPlacementService(new CellCreatorService(selfCellElements.value));
   shipPlacementService.placeShipsFromCells(battlefieldData);
-
   userController = new ShotService(battlefieldData);
-
-  const randomBattlefield: BattlefieldData = new RandomCellsService()
-      .getRandomBattlefieldData(new ShipsCounterService().getShipsArray()) as BattlefieldData;
-  botController = new BotService(
-      randomBattlefield,
-      difficultyLevel as DifficultyLevel
-  );
-
-  gameService = new GameDisplayService(
+  botController = new BotService(difficultyLevel as DifficultyLevel);
+  gameDisplay = new GameDisplayService(
       rivalShipsCounter,
       new CellCreatorService(rivalCellElements.value),
       new CellCreatorService(selfCellElements.value),
       battlefieldSelf.value,
       battlefieldRival.value
   );
-
-  gameHandler = new GameHandlerService(gameService, userController, botController);
+  gameHandler = new GameHandlerService(gameDisplay, userController, botController);
 
   rivalCellElements.value.forEach((cell: HTMLDivElement) => {
     cell.addEventListener('click', clickEnemyCell)

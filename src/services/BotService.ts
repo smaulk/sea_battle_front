@@ -6,6 +6,8 @@ import { DifficultyLevel } from "@/enums/DifficultyLevel.ts";
 import ShotService from "@/services/ShotService.ts";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import ShotCellsMatrixService from "@/services/ShotCellsMatrixService.ts";
+import RandomCellsService from "@/services/RandomCellsService.ts";
+import ShipsCounterService from "@/services/ShipsCounterService.ts";
 
 /**
  * Сервис, отвечающий за игру бота.
@@ -17,8 +19,13 @@ export default class BotService extends ShotService {
   //Уровень сложности бота
   private readonly difficultyLevel: DifficultyLevel = DifficultyLevel.Normal;
 
-  constructor(battlefieldData: BattlefieldData, difficultyLevel: DifficultyLevel) {
-    super(battlefieldData);
+  constructor(difficultyLevel: DifficultyLevel) {
+    super(
+      new RandomCellsService()
+      .getRandomBattlefieldData(
+        new ShipsCounterService().getShipsArray()
+      ) as BattlefieldData
+    );
     this._shotCellService = new ShotCellsMatrixService();
     this.difficultyLevel = difficultyLevel;
   }
