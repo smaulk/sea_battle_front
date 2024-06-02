@@ -1,6 +1,6 @@
-import { ColRowData } from "../interfaces/ColRowData.ts";
-import Ship from "./Ship.ts";
-import ShipPlaceValidationService from "../services/ShipPlaceValidationService.ts";
+import { ColRowData } from "@/interfaces/ColRowData.ts";
+import Ship from "@/models/Ship.ts";
+import ShipPlaceValidationService from "@/services/ShipPlaceValidationService.ts";
 
 /**
  * Класс клетки, отвечающий за работу с HTML элементом клетки.

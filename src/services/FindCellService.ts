@@ -1,5 +1,5 @@
 import { getColRowData } from "@/helpers";
-import { ColRowData } from "../interfaces/ColRowData.ts";
+import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { config } from "@/config.ts";
 
 /**

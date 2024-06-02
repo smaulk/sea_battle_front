@@ -1,6 +1,6 @@
 import { config } from "@/config.ts";
-import { ShipData } from "../interfaces/ShipData.ts";
-import { Position } from "../enums/Position.ts";
+import { ShipData } from "@/interfaces/ShipData.ts";
+import { Position } from "@/enums/Position.ts";
 import { reactive } from "vue";
 
 /**

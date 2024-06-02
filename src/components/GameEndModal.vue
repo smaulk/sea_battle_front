@@ -27,7 +27,7 @@ const gameInfoClass = computed(() => {
 
       <div class="modal-buttons row row-cols-1 row-cols-lg-2">
         <div class="col-12 col-lg-5">
-          <button class="btn btn-dark" @click="$router.push({name: 'Main'})"
+          <button class="btn btn-dark" @click="$router.push({name: 'main'})"
           >На главную
           </button>
         </div>

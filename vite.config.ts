@@ -3,9 +3,6 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // server:{
-  //   host: true,
-  // },
   plugins: [
     vue(),
   ],
@@ -15,7 +12,6 @@ export default defineConfig({
       '~bootstrap': 'bootstrap',
       "assets": '/src/assets',
       "components": '/src/components',
-      "game": '/src/game',
     }
   },
   css: {

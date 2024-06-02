@@ -10,7 +10,7 @@ const { img } = defineProps({
         :src="img"
         alt=""
         class="not-highlight"
-        @click="$router.push({name: 'Main'})"
+        @click="$router.push({name: 'main'})"
     >
   </div>
 </template>

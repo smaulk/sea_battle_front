@@ -32,11 +32,7 @@
       ],
       "components/*": [
         "./src/components/*"
-      ],
-      "game/*": [
-        "./src/game/*"
       ]
-
     }
     },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],

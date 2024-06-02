@@ -1,7 +1,7 @@
-import type { ShipData } from "../interfaces/ShipData.ts";
-import { ColRowData } from "../interfaces/ColRowData.ts";
+import type { ShipData } from "@/interfaces/ShipData.ts";
+import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { getAroundCells, getShipCells } from "@/helpers";
-import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
+import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**

@@ -1,11 +1,11 @@
-import { ShipData } from "../interfaces/ShipData.ts";
+import { ShipData } from "@/interfaces/ShipData.ts";
 import { getShipCells, getShipEmptyCells, } from "@/helpers";
-import { ColRowData } from "../interfaces/ColRowData.ts";
+import { ColRowData } from "@/interfaces/ColRowData.ts";
 import Cell from "@/models/Cell.ts";
 import Ship from "@/models/Ship.ts";
 import CellCreatorService from "@/services/CellCreatorService.ts";
 import { ShotData } from "@/interfaces/ShotData.ts";
-import { ShotStatus } from "../enums/ShotStatus.ts";
+import { ShotStatus } from "@/enums/ShotStatus.ts";
 import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import ShotCellsMatrixService from "@/services/ShotCellsMatrixService.ts";
 

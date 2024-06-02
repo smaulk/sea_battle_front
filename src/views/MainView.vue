@@ -17,13 +17,13 @@ import { DifficultyLevel, DifficultyLevelRU } from "@/enums/DifficultyLevel.ts";
         <div class="difficulty-btns col-10 col-sm-8 col-lg-6 col-xl-4 d-flex flex-column align-items-center gap-3">
           <button
               class="btn-u"
-              @click="$router.push({name: 'Game', query: {difficulty: DifficultyLevel.Easy}})"
+              @click="$router.push({name: 'game', query: {difficulty: DifficultyLevel.Easy}})"
           >
             {{ DifficultyLevelRU[DifficultyLevel.Easy] }}
           </button>
           <button
               class="btn-u"
-              @click="$router.push({name: 'Game', query: {difficulty: DifficultyLevel.Normal}})"
+              @click="$router.push({name: 'game', query: {difficulty: DifficultyLevel.Normal}})"
           >
             {{ DifficultyLevelRU[DifficultyLevel.Normal] }}
           </button>

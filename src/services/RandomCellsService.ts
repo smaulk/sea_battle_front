@@ -1,9 +1,9 @@
-import { ShipData } from "../interfaces/ShipData.ts";
+import { ShipData } from "@/interfaces/ShipData.ts";
 import { getNewCellData, getRandomColRowData } from "@/helpers";
-import { Position } from "../enums/Position.ts";
-import { ColRowData } from "../interfaces/ColRowData.ts";
-import ShipPlaceValidationService from "./ShipPlaceValidationService.ts";
-import { BattlefieldData } from "../interfaces/BattlefieldData.ts";
+import { Position } from "@/enums/Position.ts";
+import { ColRowData } from "@/interfaces/ColRowData.ts";
+import ShipPlaceValidationService from "@/services/ShipPlaceValidationService.ts";
+import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import CellsMatrixService from "@/services/CellsMatrixService.ts";
 
 /**

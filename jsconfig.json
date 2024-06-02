@@ -12,9 +12,6 @@
       ],
       "components/*": [
         "./src/components/*"
-      ],
-      "game/*": [
-        "./src/game/*"
       ]
     }
   },

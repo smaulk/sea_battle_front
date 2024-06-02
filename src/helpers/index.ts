@@ -1,8 +1,8 @@
-import { ColRowData } from "../interfaces/ColRowData.ts";
+import { ColRowData } from "@/interfaces/ColRowData.ts";
 import { config } from "@/config.ts";
-import { ShipData } from "../interfaces/ShipData.ts";
-import { Position } from "../enums/Position.ts";
-import { CellsMatrix } from "../interfaces/CellsMatrix.ts";
+import { ShipData } from "@/interfaces/ShipData.ts";
+import { Position } from "@/enums/Position.ts";
+import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 
 /**
  * Получить объект типа {col, row} из HTML элемента клетки

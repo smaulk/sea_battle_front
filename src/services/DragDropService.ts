@@ -1,12 +1,12 @@
 import { Ref } from "vue";
-import { ShipData } from "../interfaces/ShipData.ts";
-import { Coordinates } from "../interfaces/Coordinates.ts";
-import FindCellService from "./FindCellService.ts";
+import { ShipData } from "@/interfaces/ShipData.ts";
+import { Coordinates } from "@/interfaces/Coordinates.ts";
+import FindCellService from "@/services/FindCellService.ts";
 import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import Ship from "@/models/Ship.ts";
-import ShipPlacementService from "./ShipPlacementService.ts";
-import RandomCellsService from "./RandomCellsService.ts";
-import { BattlefieldData } from "../interfaces/BattlefieldData.ts";
+import ShipPlacementService from "@/services/ShipPlacementService.ts";
+import RandomCellsService from "@/services/RandomCellsService.ts";
+import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 
 /**
  * Сервис, отвечающий за размещение кораблей по полю.
