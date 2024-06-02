@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-
 import { ShipData } from "@/interfaces/ShipData.ts";
 
 const props = defineProps({
   shipData: Object,
 })
 const shipData: ShipData = props.shipData as ShipData;
-
 </script>
 
 <template>
@@ -20,7 +18,6 @@ const shipData: ShipData = props.shipData as ShipData;
 </template>
 
 <style lang="scss">
-
 .ship {
   cursor: move;
   touch-action: none;
@@ -74,12 +71,10 @@ const shipData: ShipData = props.shipData as ShipData;
   z-index: 1001 !important;
 }
 
-
 .ship-place-forbidden {
   border: 3px solid red !important;
   background-color: rgba(255, 0, 0, 0.5) !important;
 }
-
 
 @keyframes shake {
   20%, 80% {
@@ -94,5 +89,4 @@ const shipData: ShipData = props.shipData as ShipData;
 .shake-animation {
   animation: shake 0.3s ease;
 }
-
 </style>

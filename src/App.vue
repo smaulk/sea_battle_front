@@ -1,10 +1,9 @@
-<!--suppress CssUnusedSymbol -->
 <script lang="ts" setup>
-import Header from "components/AppHeader.vue";
+import AppHeader from "components/AppHeader.vue";
 </script>
 
 <template>
-  <Header/>
+  <AppHeader/>
 
   <RouterView
       v-slot="{ Component }"
@@ -16,24 +15,7 @@ import Header from "components/AppHeader.vue";
       />
     </transition>
   </RouterView>
-
 </template>
 
 <style lang="scss" scoped>
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: opacity 0.5s, transform 0.5s;
-}
-
-.fade-slide-enter-from,
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateX(-50px);
-}
-
-.fade-slide-enter-to,
-.fade-slide-leave-from {
-  opacity: 1;
-  transform: translateX(0);
-}
 </style>

@@ -22,9 +22,9 @@ export default class BotService extends ShotService {
   constructor(difficultyLevel: DifficultyLevel) {
     super(
       new RandomCellsService()
-      .getRandomBattlefieldData(
-        new ShipsCounterService().getShipsArray()
-      ) as BattlefieldData
+        .getRandomBattlefieldData(
+          new ShipsCounterService().getShipsArray()
+        ) as BattlefieldData
     );
     this._shotCellService = new ShotCellsMatrixService();
     this.difficultyLevel = difficultyLevel;

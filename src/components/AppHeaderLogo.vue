@@ -1,10 +1,7 @@
 <script lang="ts" setup>
-
 const { img } = defineProps({
   img: String,
 });
-
-
 </script>
 
 <template>

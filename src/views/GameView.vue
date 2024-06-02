@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-
 import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
-import StartGameBlock from "components/GameStartBlock.vue";
-import ProcessGameBlock from "components/GameProcessBlock.vue";
+import GameStartBlock from "components/GameStartBlock.vue";
+import GameProcessBlock from "components/GameProcessBlock.vue";
 import { ShipData } from "@/interfaces/ShipData.ts";
 import { useRoute } from "vue-router";
 import { DifficultyLevel } from "@/enums/DifficultyLevel.ts";
@@ -17,7 +16,6 @@ const startGame = (cells: CellsMatrix, ships: Array<ShipData>) => {
   cellsArray = cells;
   shipsArray = ships
 }
-
 
 onMounted(() => {
   window.addEventListener('beforeunload', updateAlert);
@@ -35,7 +33,6 @@ const reloadGame = () => {
   gameIsStarted.value = false;
 }
 
-
 const route = useRoute();
 /**
  * При установке легкого режима, бот будет играть в легком режиме,
@@ -48,18 +45,15 @@ onBeforeMount(() => {
     difficultyLevel = DifficultyLevel.Easy;
   }
 })
-
-
 </script>
 
 <template>
   <div :key="$route.fullPath">
-    <ProcessGameBlock v-if="gameIsStarted" :cells-array="cellsArray" :difficulty-level="difficultyLevel"
+    <GameProcessBlock v-if="gameIsStarted" :cells-array="cellsArray" :difficulty-level="difficultyLevel"
                       :ships-array="shipsArray" @reload-game="reloadGame"/>
-    <StartGameBlock v-else :difficulty-level="difficultyLevel" @start-game="startGame"/>
+    <GameStartBlock v-else :difficulty-level="difficultyLevel" @start-game="startGame"/>
   </div>
 </template>
 
 <style lang="scss" scoped>
-
 </style>

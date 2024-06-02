@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import BattlefieldBlock from "components/Battlefield.vue";
+import Battlefield from "components/Battlefield.vue";
 import { onMounted, ref } from "vue";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";
 import Ship from "components/Ship.vue";
@@ -8,9 +8,9 @@ import GameDisplayService from "@/services/GameDisplayService.ts";
 import CellCreatorService from "@/services/CellCreatorService.ts";
 import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import { GameStatus } from "@/enums/GameStatus.ts";
-import GameEndWindow from "components/GameEndModal.vue";
+import GameEndModal from "components/GameEndModal.vue";
 import { DifficultyLevel, DifficultyLevelRU } from "@/enums/DifficultyLevel.ts";
-import RivalDestroyedShips from "components/RivalShipsContainer.vue";
+import RivalShipsContainer from "components/RivalShipsContainer.vue";
 import { BattlefieldData } from "@/interfaces/BattlefieldData.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 import { ShipData } from "@/interfaces/ShipData.ts";
@@ -90,7 +90,7 @@ const getRivalShipsRemainingCount = (size: number): number => {
       <div ref="battlefieldSelf"
            class="battlefield__self battlefield__wait col-12 col-xl-6 col-xxl-5">
         <p class="h2 text-center not-highlight">Ваше поле</p>
-        <BattlefieldBlock v-model:cells="selfCellElements"/>
+        <Battlefield v-model:cells="selfCellElements"/>
         <Ship v-for="ship in shipsArray as Array<ShipData>"
               :ship-data="ship"
               class="static"
@@ -103,12 +103,12 @@ const getRivalShipsRemainingCount = (size: number): number => {
            mx-0 gap-3 row">
         <div class="col-12 col-sm-8 col-lg-7 col-xl-12 col-xxl-8">
           <p class="h2 text-center not-highlight">Поле противника</p>
-          <BattlefieldBlock v-model:cells="rivalCellElements"/>
+          <Battlefield v-model:cells="rivalCellElements"/>
         </div>
-        <RivalDestroyedShips :get-remaining-count="getRivalShipsRemainingCount" class="col"/>
+        <RivalShipsContainer :get-remaining-count="getRivalShipsRemainingCount" class="col"/>
       </div>
 
-      <GameEndWindow v-if="gameInfo" :game-info="gameInfo" @reload-game="emits('reloadGame')"/>
+      <GameEndModal v-if="gameInfo" :game-info="gameInfo" @reload-game="emits('reloadGame')"/>
     </div>
   </div>
 

@@ -6,7 +6,7 @@ import DragDropService from "@/services/DragDropService.ts";
 import ShipPlacementService from "@/services/ShipPlacementService.ts";
 import ShipsCounterService from "@/services/ShipsCounterService.ts";
 import Battlefield from "components/Battlefield.vue";
-import ShipContainer from "components/PlacementShipsContainer.vue";
+import PlacementShipsContainer from "components/PlacementShipsContainer.vue";
 import CellCreatorService from "@/services/CellCreatorService.ts";
 import { CellsMatrix } from "@/interfaces/CellsMatrix.ts";
 
@@ -97,7 +97,7 @@ const addEventsToWindow = (dragDropService: DragDropService) => {
       class="d-flex align-items-center justify-content-center not-highlight row row-cols-1 row-cols-lg-2 gap-3 gap-lg-5">
 
     <Battlefield v-model:cells="cellElements"/>
-    <ShipContainer
+    <PlacementShipsContainer
         :get-remaining-count="getRemainingCount"
         :get-ship-style="getShipStyle"
         :get-ships-by-size="getShipsBySize"

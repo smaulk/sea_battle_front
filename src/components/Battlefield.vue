@@ -4,7 +4,6 @@ import { config } from "@/config.ts";
 
 const emits = defineEmits(['update:cells'])
 
-
 const cellElements = ref(null);
 onMounted(() => {
   emits('update:cells', cellElements.value);

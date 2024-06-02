@@ -90,3 +90,20 @@ body {
 .h6 {
   font-size: calc(1.1rem + 0.3vw);
 }
+
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}

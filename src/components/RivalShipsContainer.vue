@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 import { Position } from "@/enums/Position.ts";
 
 const { getRemainingCount } = defineProps({
@@ -12,7 +11,6 @@ const remainingCount = (size: number): number | null => {
   }
   return null;
 }
-
 </script>
 
 <template>

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-
 </script>
 
 <template>
@@ -14,5 +13,4 @@
 .main {
   font-size: 8em;
 }
-
 </style>
