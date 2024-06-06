@@ -101,7 +101,7 @@ const getRivalShipsRemainingCount = (size: number): number => {
           ref="battlefieldRival"
           class="battlefield__rival col-12 col-xl-6 col-xxl-7 d-flex justify-content-center align-items-center
            mx-0 gap-3 row">
-        <div class="col-12 col-sm-8 col-lg-7 col-xl-12 col-xxl-8">
+        <div class="col-12 col-sm-8 col-lg-7 col-xl-12 col-xxl-7">
           <p class="h2 text-center not-highlight">Поле противника</p>
           <Battlefield v-model:cells="rivalCellElements"/>
         </div>
